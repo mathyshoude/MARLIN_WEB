@@ -18,11 +18,13 @@
   --foam: #e8f4f8;
   --foam-dim: #94adb8;
   --rust: #ff6b35;
+  --gold: #ffd700;
+  --silver: #c0c0c0;
+  --platine: #e5e4e2;
   --grid: rgba(0, 225, 255, 0.06);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 html { scroll-behavior: smooth; }
 
 body {
@@ -50,7 +52,7 @@ nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
-  padding: 1.5rem 3rem;
+  padding: 1.2rem 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -59,31 +61,27 @@ nav {
   -webkit-backdrop-filter: blur(8px);
   transition: padding 0.3s ease;
 }
-nav.scrolled { padding: 1rem 3rem; background: rgba(3,16,26,0.85); }
+nav.scrolled { padding: 0.8rem 3rem; background: rgba(3,16,26,0.92); }
 
 .logo {
   font-family: 'Archivo', sans-serif;
   font-weight: 900;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   letter-spacing: 0.2em;
   color: var(--foam);
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: 1rem;
 }
-.logo-mark {
-  width: 28px; height: 28px;
-  border: 1.5px solid var(--signal);
-  position: relative;
-  transform: rotate(45deg);
+.logo-img {
+  width: 52px; height: 52px;
+  object-fit: contain;
+  filter: brightness(1.1) drop-shadow(0 0 8px rgba(0,225,255,0.3));
+  transition: all 0.3s;
 }
-.logo-mark::before {
-  content: '';
-  position: absolute;
-  inset: 4px;
-  border: 1px solid var(--signal-dim);
-}
+nav.scrolled .logo-img { width: 40px; height: 40px; }
+.logo:hover .logo-img { filter: brightness(1.3) drop-shadow(0 0 14px rgba(0,225,255,0.5)); }
 
 .nav-links {
   display: flex;
@@ -120,10 +118,11 @@ nav.scrolled { padding: 1rem 3rem; background: rgba(3,16,26,0.85); }
   padding: 0.3rem 0.6rem;
   cursor: pointer;
   transition: all 0.2s;
+  background: transparent;
 }
 .lang:hover { border-color: var(--signal); color: var(--signal); }
 
-/* ============ GRID OVERLAY (engineering vibe) ============ */
+/* ============ GRID OVERLAY ============ */
 .grid-bg {
   position: fixed;
   inset: 0;
@@ -145,8 +144,6 @@ nav.scrolled { padding: 1rem 3rem; background: rgba(3,16,26,0.85); }
   overflow: hidden;
   z-index: 2;
 }
-
-/* Ocean depth gradient layer */
 .hero::before {
   content: '';
   position: absolute;
@@ -158,7 +155,6 @@ nav.scrolled { padding: 1rem 3rem; background: rgba(3,16,26,0.85); }
   z-index: -1;
 }
 
-/* Animated canvas for the particle/sonar effect — will sit under content */
 #particles {
   position: absolute;
   inset: 0;
@@ -222,11 +218,7 @@ nav.scrolled { padding: 1rem 3rem; background: rgba(3,16,26,0.85); }
 }
 .hero-sub strong { color: var(--foam); font-weight: 500; }
 
-.hero-cta {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
+.hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
 .btn {
   display: inline-flex;
   align-items: center;
@@ -373,9 +365,136 @@ section {
   color: var(--foam-dim);
 }
 
-/* ============ BATEAU SECTION (with CAD placeholder) ============ */
-.bateau {
+/* SuMoTh badge */
+.sumoth-badge {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  padding: 1.5rem 2rem;
+  border: 1px solid rgba(0,225,255,0.2);
+  background: rgba(0,225,255,0.03);
+}
+.sumoth-badge img {
+  width: 80px; height: 80px;
+  object-fit: contain;
+}
+.sumoth-badge-text {
+  flex: 1;
+}
+.sumoth-badge-text h4 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+  color: var(--foam);
+}
+.sumoth-badge-text p {
+  font-size: 0.9rem !important;
+  color: var(--foam-dim);
+  margin-bottom: 0 !important;
+}
+
+/* ============ FOILING SECTION (boat in flight parallax) ============ */
+.foiling {
+  position: relative;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
   background: var(--deep);
+}
+.foiling-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(3,16,26,0.3) 0%, rgba(3,16,26,0.8) 100%),
+    linear-gradient(135deg, var(--ocean) 0%, var(--deep) 50%, var(--abyss) 100%);
+}
+.foiling-waves {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 200px;
+  overflow: hidden;
+}
+.foiling-waves svg {
+  position: absolute;
+  bottom: 0;
+  width: 200%;
+  animation: wave-drift 12s linear infinite;
+}
+@keyframes wave-drift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.foiling-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+.foiling-visual {
+  position: relative;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.foiling-boat {
+  animation: foil-fly 4s ease-in-out infinite;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+}
+@keyframes foil-fly {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-20px) rotate(0deg); }
+}
+.foiling-text h2 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+}
+.foiling-text h2 .accent { color: var(--signal); }
+.foiling-text p {
+  color: var(--foam-dim);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  max-width: 500px;
+}
+.speed-readout {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+.speed-item {
+  text-align: center;
+}
+.speed-val {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: 2.5rem;
+  color: var(--signal);
+  line-height: 1;
+}
+.speed-unit {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--foam-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-top: 0.3rem;
+}
+
+/* ============ BATEAU SECTION ============ */
+.bateau {
+  background: linear-gradient(to bottom, var(--deep) 0%, var(--abyss) 100%);
   position: relative;
   overflow: hidden;
 }
@@ -433,10 +552,7 @@ section {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.cad-model {
-  position: relative;
-  animation: float 6s ease-in-out infinite;
-}
+.cad-model { position: relative; animation: float 6s ease-in-out infinite; }
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-15px); }
@@ -479,7 +595,6 @@ section {
 }
 .cad-coords .v { color: var(--signal); }
 
-/* Subsystem cards */
 .subsystems {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -523,9 +638,219 @@ section {
   line-height: 1.6;
 }
 
+/* ============ R&D NEURAL NETWORK SECTION ============ */
+.neural {
+  background: linear-gradient(to bottom, var(--abyss) 0%, var(--deep) 50%, var(--abyss) 100%);
+  position: relative;
+  overflow: hidden;
+}
+.neural-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.neural-visual {
+  position: relative;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#neural-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.neural-text h3 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+.neural-text h3 .accent { color: var(--signal); }
+.neural-text p {
+  color: var(--foam-dim);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 1.2rem;
+}
+.neural-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.neural-stat {
+  padding: 1.2rem;
+  border: 1px solid rgba(0,225,255,0.15);
+  background: rgba(0,225,255,0.03);
+}
+.neural-stat-val {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: 1.8rem;
+  color: var(--signal);
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+.neural-stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--foam-dim);
+}
+
+/* ============ PCB SECTION ============ */
+.pcb-section {
+  background: var(--deep);
+  position: relative;
+  overflow: hidden;
+}
+.pcb-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.pcb-visual {
+  position: relative;
+  height: 450px;
+  border: 1px solid rgba(0,225,255,0.15);
+  background: rgba(3,16,26,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.pcb-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0,225,255,0.03) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(0,225,255,0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.pcb-placeholder-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+.pcb-chip {
+  width: 120px; height: 120px;
+  border: 2px solid var(--signal);
+  margin: 0 auto 1.5rem;
+  position: relative;
+  background: rgba(0,225,255,0.05);
+  animation: chip-pulse 3s ease-in-out infinite;
+}
+@keyframes chip-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,225,255,0.2); }
+  50% { box-shadow: 0 0 30px 10px rgba(0,225,255,0.1); }
+}
+.pcb-chip::before, .pcb-chip::after {
+  content: '';
+  position: absolute;
+  background: var(--signal);
+}
+.pcb-chip::before {
+  width: 2px; height: 20px;
+  top: -22px; left: 50%;
+  transform: translateX(-50%);
+  box-shadow:
+    -20px 0 0 var(--signal-dim),
+    20px 0 0 var(--signal-dim),
+    -20px calc(100% + 24px) 0 var(--signal-dim),
+    0 calc(100% + 24px) 0 var(--signal),
+    20px calc(100% + 24px) 0 var(--signal-dim);
+}
+.pcb-chip::after {
+  height: 2px; width: 20px;
+  left: -22px; top: 50%;
+  transform: translateY(-50%);
+  box-shadow:
+    0 -20px 0 var(--signal-dim),
+    0 20px 0 var(--signal-dim),
+    calc(100% + 24px) -20px 0 var(--signal-dim),
+    calc(100% + 24px) 0 0 var(--signal),
+    calc(100% + 24px) 20px 0 var(--signal-dim);
+}
+.pcb-chip-label {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--signal);
+  text-align: center;
+  line-height: 1.4;
+}
+.pcb-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--signal-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+.pcb-status .blink {
+  display: inline-block;
+  width: 6px; height: 6px;
+  background: var(--rust);
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  animation: blink-status 1.5s infinite;
+}
+@keyframes blink-status {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.pcb-text h3 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+.pcb-text h3 .accent { color: var(--signal); }
+.pcb-text p {
+  color: var(--foam-dim);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.pcb-specs {
+  margin-top: 2rem;
+  display: grid;
+  gap: 0.8rem;
+}
+.pcb-spec {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border-left: 2px solid var(--signal);
+  background: rgba(0,225,255,0.03);
+}
+.pcb-spec-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--signal);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  min-width: 100px;
+}
+.pcb-spec-val {
+  font-size: 0.9rem;
+  color: var(--foam-dim);
+}
+
 /* ============ PHASES R&D ============ */
 .phases {
-  background: linear-gradient(to bottom, var(--deep) 0%, var(--abyss) 100%);
+  background: linear-gradient(to bottom, var(--abyss) 0%, var(--deep) 100%);
 }
 .phases-track {
   display: grid;
@@ -541,17 +866,8 @@ section {
   height: 1px;
   background: linear-gradient(to right, var(--signal) 0%, var(--signal-dim) 50%, rgba(74,163,196,0.3) 100%);
 }
-.phase {
-  position: relative;
-  padding: 0 1.5rem;
-  text-align: left;
-}
-.phase-num {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
+.phase { position: relative; padding: 0 1.5rem; text-align: left; }
+.phase-num { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
 .phase-dot {
   width: 60px; height: 60px;
   border-radius: 50%;
@@ -584,16 +900,10 @@ section {
   letter-spacing: -0.01em;
 }
 .phase h3 .accent { color: var(--signal); }
-.phase p {
-  color: var(--foam-dim);
-  font-size: 0.95rem;
-  line-height: 1.6;
-}
+.phase p { color: var(--foam-dim); font-size: 0.95rem; line-height: 1.6; }
 
 /* ============ EQUIPE ============ */
-.equipe {
-  background: var(--abyss);
-}
+.equipe { background: var(--abyss); }
 .team-group { margin-bottom: 4rem; }
 .team-group-head {
   display: flex;
@@ -614,15 +924,12 @@ section {
   font-size: 0.75rem;
   color: var(--signal);
 }
-
 .team-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 1rem;
 }
-.member {
-  text-align: left;
-}
+.member { text-align: left; }
 .member-photo {
   width: 100%;
   aspect-ratio: 4/5;
@@ -650,11 +957,7 @@ section {
 }
 .member:hover .member-photo { transform: translateY(-4px); }
 .member:hover .member-photo .placeholder-icon { color: var(--signal); }
-.member-name {
-  font-weight: 500;
-  font-size: 0.95rem;
-  margin-bottom: 0.2rem;
-}
+.member-name { font-weight: 500; font-size: 0.95rem; margin-bottom: 0.2rem; }
 .member-role {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.7rem;
@@ -665,42 +968,164 @@ section {
 
 /* ============ SPONSORS ============ */
 .sponsors {
-  background: var(--deep);
+  background: linear-gradient(to bottom, var(--deep) 0%, var(--abyss) 100%);
   text-align: center;
 }
-.sponsors-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
+
+.sponsors-showcase {
   margin: 4rem 0;
 }
-.sponsor-slot {
-  aspect-ratio: 16/9;
-  border: 1px solid rgba(255,255,255,0.1);
+.sponsor-tier {
+  margin-bottom: 3rem;
+}
+.sponsor-tier-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.sponsor-tier-label .tier-icon {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+}
+.tier-platine .tier-icon {
+  background: linear-gradient(135deg, #e5e4e2, #ffffff, #e5e4e2);
+  box-shadow: 0 0 15px rgba(229,228,226,0.4);
+}
+.tier-platine .sponsor-tier-label { color: var(--platine); }
+.tier-or .tier-icon {
+  background: linear-gradient(135deg, #b8860b, #ffd700, #b8860b);
+  box-shadow: 0 0 15px rgba(255,215,0,0.3);
+}
+.tier-or .sponsor-tier-label { color: var(--gold); }
+.tier-argent .tier-icon {
+  background: linear-gradient(135deg, #808080, #c0c0c0, #808080);
+  box-shadow: 0 0 10px rgba(192,192,192,0.2);
+}
+.tier-argent .sponsor-tier-label { color: var(--silver); }
+
+.sponsor-tier-line {
+  width: 100%;
+  height: 1px;
+  margin-bottom: 2rem;
+}
+.tier-platine .sponsor-tier-line {
+  background: linear-gradient(to right, transparent, var(--platine), transparent);
+}
+.tier-or .sponsor-tier-line {
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+}
+.tier-argent .sponsor-tier-line {
+  background: linear-gradient(to right, transparent, var(--silver), transparent);
+}
+
+.sponsor-tier-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.sponsor-card {
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.02);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+.sponsor-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.sponsor-card img {
+  object-fit: contain;
+  filter: grayscale(1) brightness(1.5);
+  opacity: 0.6;
+  transition: all 0.4s;
+}
+.sponsor-card:hover img {
+  filter: grayscale(0) brightness(1);
+  opacity: 1;
+}
+
+.tier-platine .sponsor-card {
+  width: 280px; height: 140px;
+  padding: 2rem;
+}
+.tier-platine .sponsor-card::before {
+  background: linear-gradient(135deg, rgba(229,228,226,0.1), transparent);
+}
+.tier-platine .sponsor-card:hover {
+  border-color: var(--platine);
+  transform: translateY(-6px);
+  box-shadow: 0 10px 40px rgba(229,228,226,0.15);
+}
+.tier-platine .sponsor-card:hover::before { opacity: 1; }
+.tier-platine .sponsor-card img { max-width: 80%; max-height: 70%; }
+
+.tier-or .sponsor-card {
+  width: 220px; height: 110px;
+  padding: 1.5rem;
+}
+.tier-or .sponsor-card::before {
+  background: linear-gradient(135deg, rgba(255,215,0,0.08), transparent);
+}
+.tier-or .sponsor-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(255,215,0,0.1);
+}
+.tier-or .sponsor-card:hover::before { opacity: 1; }
+.tier-or .sponsor-card img { max-width: 75%; max-height: 65%; }
+
+.tier-argent .sponsor-card {
+  width: 180px; height: 90px;
+  padding: 1.2rem;
+}
+.tier-argent .sponsor-card:hover {
+  border-color: var(--silver);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(192,192,192,0.08);
+}
+.tier-argent .sponsor-card img { max-width: 70%; max-height: 60%; }
+
+.sponsor-empty {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--foam-dim);
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  transition: all 0.3s;
 }
-.sponsor-slot:hover { border-color: var(--signal); color: var(--signal); }
 
 .tiers {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.5rem;
-  margin-top: 3rem;
+  margin-top: 4rem;
   text-align: left;
 }
 .tier {
   border: 1px solid rgba(255,255,255,0.1);
   padding: 2rem 1.5rem;
   background: rgba(3,16,26,0.4);
+  transition: all 0.3s;
 }
+.tier:hover { transform: translateY(-4px); }
+.tier:nth-child(1) { border-top: 3px solid var(--silver); }
+.tier:nth-child(2) { border-top: 3px solid var(--gold); }
+.tier:nth-child(3) { border-top: 3px solid var(--platine); }
 .tier-name {
   font-family: 'Archivo', sans-serif;
   font-weight: 900;
@@ -709,9 +1134,9 @@ section {
   text-transform: uppercase;
   margin-bottom: 0.5rem;
 }
-.tier:nth-child(1) .tier-name { color: var(--foam-dim); }
-.tier:nth-child(2) .tier-name { color: var(--signal-dim); }
-.tier:nth-child(3) .tier-name { color: var(--signal); }
+.tier:nth-child(1) .tier-name { color: var(--silver); }
+.tier:nth-child(2) .tier-name { color: var(--gold); }
+.tier:nth-child(3) .tier-name { color: var(--platine); }
 .tier-amount {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85rem;
@@ -802,10 +1227,18 @@ footer {
   .hero { padding: 0 1.5rem; }
   .hero-meta { left: 1.5rem; right: 1.5rem; bottom: 1.5rem; flex-direction: column; gap: 1rem; align-items: flex-start; }
   .defi-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .foiling-content { grid-template-columns: 1fr; gap: 2rem; padding: 0 1.5rem; }
+  .foiling-visual { height: 250px; }
+  .neural-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .neural-visual { height: 300px; }
+  .pcb-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .pcb-visual { height: 300px; }
   .phases-track { grid-template-columns: 1fr; gap: 3rem; }
   .phases-track::before { display: none; }
   .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
   .footer-bottom { flex-direction: column; gap: 1rem; }
+  .tier-platine .sponsor-card { width: 220px; height: 110px; }
+  .tier-or .sponsor-card { width: 180px; height: 90px; }
 }
 </style>
 </head>
@@ -816,13 +1249,14 @@ footer {
 <!-- ============ NAVIGATION ============ -->
 <nav id="nav">
   <a href="#" class="logo">
-    <span class="logo-mark"></span>
+    <img src="media/LogoMarlin.png" alt="MARLIN" class="logo-img">
     MARLIN
   </a>
   <ul class="nav-links">
     <li><a href="#defi">Le défi</a></li>
     <li><a href="#bateau">Technologie</a></li>
-    <li><a href="#phases">R&amp;D</a></li>
+    <li><a href="#neural">R&amp;D / IA</a></li>
+    <li><a href="#phases">Phases</a></li>
     <li><a href="#equipe">Équipe</a></li>
     <li><a href="#sponsors">Sponsors</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -867,7 +1301,7 @@ footer {
   <div class="scroll-cue"></div>
 </section>
 
-<!-- ============ LE DÉFI ============ -->
+<!-- ============ LE DÉFI + SUMOTH ============ -->
 <section class="defi" id="defi">
   <div class="container">
     <div class="section-head reveal">
@@ -882,6 +1316,13 @@ footer {
         <p>
           Le jury évalue chaque équipe sur quatre piliers : <strong>durabilité</strong> des matériaux et procédés, <strong>innovation</strong> technique, <strong>qualité de la conception</strong>, et <strong>performance en eau</strong>. Voler n'est pas suffisant : il faut voler intelligemment, économiquement, et savoir le démontrer.
         </p>
+        <div class="sumoth-badge">
+          <img src="media/SuMoTh.png" alt="SuMoTh Challenge">
+          <div class="sumoth-badge-text">
+            <h4>SuMoTh International Challenge</h4>
+            <p>Compétition officielle — Lac de Garde, Italie. Organisée par la fondation SuMoTh pour promouvoir l'innovation durable en voile de compétition.</p>
+          </div>
+        </div>
       </div>
       <div class="defi-stats">
         <div class="stat">
@@ -905,6 +1346,67 @@ footer {
   </div>
 </section>
 
+<!-- ============ FOILING (bateau en vol) ============ -->
+<section class="foiling" id="foiling">
+  <div class="foiling-bg"></div>
+  <div class="foiling-waves">
+    <svg viewBox="0 0 2400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 100 Q300 50 600 100 Q900 150 1200 100 Q1500 50 1800 100 Q2100 150 2400 100 L2400 200 L0 200 Z" fill="rgba(0,225,255,0.05)" stroke="rgba(0,225,255,0.15)" stroke-width="1"/>
+      <path d="M0 130 Q300 90 600 130 Q900 170 1200 130 Q1500 90 1800 130 Q2100 170 2400 130 L2400 200 L0 200 Z" fill="rgba(10,59,92,0.3)"/>
+    </svg>
+  </div>
+  <div class="foiling-content">
+    <div class="foiling-visual reveal">
+      <div class="foiling-boat">
+        <svg width="400" height="320" viewBox="0 0 400 320" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 40px rgba(0,225,255,0.3));">
+          <!-- Hull lifted above water -->
+          <path d="M 50 120 Q 130 80 200 75 Q 280 70 350 120 Q 280 135 200 140 Q 130 140 50 120 Z" stroke="#00e1ff" stroke-width="1.5" fill="rgba(0,225,255,0.06)"/>
+          <!-- Mast -->
+          <line x1="200" y1="80" x2="200" y2="10" stroke="#00e1ff" stroke-width="2"/>
+          <!-- Sail -->
+          <path d="M 200 15 L 200 80 L 290 60 Z" stroke="#00e1ff" stroke-width="1.2" fill="rgba(0,225,255,0.08)"/>
+          <path d="M 200 35 L 260 50" stroke="#4aa3c4" stroke-width="0.6" opacity="0.5"/>
+          <path d="M 200 55 L 275 57" stroke="#4aa3c4" stroke-width="0.6" opacity="0.5"/>
+          <!-- Vertical strut -->
+          <line x1="200" y1="140" x2="200" y2="220" stroke="#00e1ff" stroke-width="1.5"/>
+          <!-- Main foil -->
+          <path d="M 140 220 Q 200 212 260 220 Q 200 228 140 220 Z" stroke="#ff6b35" stroke-width="1.5" fill="rgba(255,107,53,0.12)"/>
+          <!-- Rudder -->
+          <line x1="340" y1="135" x2="340" y2="195" stroke="#00e1ff" stroke-width="1.2"/>
+          <path d="M 310 195 Q 340 190 370 195 Q 340 200 310 195 Z" stroke="#ff6b35" stroke-width="1" fill="rgba(255,107,53,0.1)"/>
+          <!-- Water surface -->
+          <line x1="10" y1="240" x2="390" y2="240" stroke="#1a6e9c" stroke-width="0.8" stroke-dasharray="6 4" opacity="0.5"/>
+          <text x="20" y="255" font-family="JetBrains Mono" font-size="8" fill="#1a6e9c" opacity="0.6">WATERLINE</text>
+          <!-- Speed lines -->
+          <line x1="20" y1="100" x2="45" y2="100" stroke="#00e1ff" stroke-width="0.5" opacity="0.3"/>
+          <line x1="10" y1="110" x2="40" y2="110" stroke="#00e1ff" stroke-width="0.5" opacity="0.2"/>
+          <line x1="25" y1="120" x2="48" y2="120" stroke="#00e1ff" stroke-width="0.5" opacity="0.15"/>
+        </svg>
+      </div>
+    </div>
+    <div class="foiling-text reveal">
+      <h2>Né pour <span class="accent">voler.</span></h2>
+      <p>
+        À pleine vitesse, la coque du Moth quitte entièrement la surface. Seuls les foils restent immergés — le bateau vole littéralement au-dessus de l'eau, réduisant la traînée de 80% et libérant une vitesse que seuls les multicoques de course atteignaient il y a 10 ans.
+      </p>
+      <div class="speed-readout">
+        <div class="speed-item">
+          <div class="speed-val">30</div>
+          <div class="speed-unit">nœuds max</div>
+        </div>
+        <div class="speed-item">
+          <div class="speed-val">60</div>
+          <div class="speed-unit">cm altitude</div>
+        </div>
+        <div class="speed-item">
+          <div class="speed-val">-80%</div>
+          <div class="speed-unit">traînée en vol</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ LE BATEAU ============ -->
 <section class="bateau" id="bateau">
   <div class="container">
@@ -913,7 +1415,6 @@ footer {
       <h2>Un Moth qui apprend de chaque sortie.</h2>
     </div>
 
-    <!-- CAD MODEL PLACEHOLDER -->
     <div class="cad-stage reveal">
       <div class="cad-coords">
         MODEL · MARLIN_V1.STEP<br>
@@ -923,38 +1424,24 @@ footer {
       <div class="cad-placeholder">
         <div class="cad-rings"></div>
         <div class="cad-model">
-          <!-- Stylized wireframe boat SVG -->
           <svg width="500" height="280" viewBox="0 0 500 280" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 30px rgba(0,225,255,0.3));">
-            <!-- Hull -->
-            <path d="M 60 140 Q 150 100 250 95 Q 360 90 440 140 Q 360 160 250 165 Q 150 165 60 140 Z"
-                  stroke="#00e1ff" stroke-width="1.2" fill="rgba(0,225,255,0.04)"/>
-            <!-- Hull contour lines -->
+            <path d="M 60 140 Q 150 100 250 95 Q 360 90 440 140 Q 360 160 250 165 Q 150 165 60 140 Z" stroke="#00e1ff" stroke-width="1.2" fill="rgba(0,225,255,0.04)"/>
             <path d="M 90 138 Q 200 122 410 138" stroke="#4aa3c4" stroke-width="0.6" fill="none" opacity="0.5"/>
             <path d="M 90 142 Q 200 152 410 142" stroke="#4aa3c4" stroke-width="0.6" fill="none" opacity="0.5"/>
-            <!-- Cross sections -->
             <ellipse cx="150" cy="140" rx="6" ry="15" stroke="#4aa3c4" stroke-width="0.5" fill="none" opacity="0.6"/>
             <ellipse cx="250" cy="140" rx="8" ry="22" stroke="#4aa3c4" stroke-width="0.5" fill="none" opacity="0.6"/>
             <ellipse cx="350" cy="140" rx="6" ry="18" stroke="#4aa3c4" stroke-width="0.5" fill="none" opacity="0.6"/>
-            <!-- Mast -->
             <line x1="250" y1="100" x2="250" y2="20" stroke="#00e1ff" stroke-width="1.5"/>
             <line x1="250" y1="20" x2="250" y2="15" stroke="#00e1ff" stroke-width="3"/>
-            <!-- Sail (triangle) -->
             <path d="M 250 25 L 250 100 L 330 85 Z" stroke="#00e1ff" stroke-width="1" fill="rgba(0,225,255,0.06)"/>
             <path d="M 250 50 L 305 70" stroke="#4aa3c4" stroke-width="0.5" opacity="0.6"/>
             <path d="M 250 75 L 318 80" stroke="#4aa3c4" stroke-width="0.5" opacity="0.6"/>
-            <!-- Vertical strut down -->
             <line x1="250" y1="160" x2="250" y2="220" stroke="#00e1ff" stroke-width="1.5"/>
-            <!-- Main foil (horizontal underwater) -->
-            <path d="M 195 220 Q 250 215 305 220 Q 250 225 195 220 Z"
-                  stroke="#ff6b35" stroke-width="1.2" fill="rgba(255,107,53,0.08)"/>
+            <path d="M 195 220 Q 250 215 305 220 Q 250 225 195 220 Z" stroke="#ff6b35" stroke-width="1.2" fill="rgba(255,107,53,0.08)"/>
             <line x1="195" y1="220" x2="305" y2="220" stroke="#ff6b35" stroke-width="0.5" opacity="0.6"/>
-            <!-- Rudder foil -->
             <line x1="430" y1="160" x2="430" y2="210" stroke="#00e1ff" stroke-width="1.2"/>
-            <path d="M 400 210 Q 430 207 460 210 Q 430 213 400 210 Z"
-                  stroke="#ff6b35" stroke-width="1" fill="rgba(255,107,53,0.08)"/>
-            <!-- Water line -->
+            <path d="M 400 210 Q 430 207 460 210 Q 430 213 400 210 Z" stroke="#ff6b35" stroke-width="1" fill="rgba(255,107,53,0.08)"/>
             <line x1="20" y1="245" x2="480" y2="245" stroke="#1a6e9c" stroke-width="0.5" stroke-dasharray="3 3" opacity="0.6"/>
-            <!-- Annotations -->
             <text x="340" y="55" font-family="JetBrains Mono" font-size="9" fill="#00e1ff" opacity="0.8">VOILE</text>
             <text x="330" y="220" font-family="JetBrains Mono" font-size="9" fill="#ff6b35" opacity="0.8">FOIL PRINCIPAL</text>
             <text x="475" y="215" font-family="JetBrains Mono" font-size="9" fill="#ff6b35" opacity="0.8" text-anchor="end">SAFRAN</text>
@@ -971,7 +1458,6 @@ footer {
       </div>
     </div>
 
-    <!-- Subsystems -->
     <div class="subsystems reveal">
       <div class="subsys-card">
         <div class="num">/ 01</div>
@@ -997,11 +1483,100 @@ footer {
   </div>
 </section>
 
+<!-- ============ R&D NEURAL NETWORK ============ -->
+<section class="neural" id="neural">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="label">03 — Intelligence artificielle</span>
+      <h2>Un cerveau numérique<br>au cœur du <span class="accent">Moth.</span></h2>
+    </div>
+    <div class="neural-grid reveal">
+      <div class="neural-visual">
+        <canvas id="neural-canvas"></canvas>
+      </div>
+      <div class="neural-text">
+        <h3>Réseau de neurones <span class="accent">résiduel</span></h3>
+        <p>
+          Notre NN est entraîné sur des milliers de simulations CFD (OpenFOAM, k-ω SST). Il prédit les forces de portance et traînée sur le foil en fonction de l'angle d'attaque, la vitesse, et l'immersion — en microsecondes au lieu de minutes.
+        </p>
+        <p>
+          En Phase 2, il remplace le solveur pour l'exploration paramétrique : l'équipe mécanique teste 100 configurations de foil en une nuit. En Phase 3, il devient le modèle interne d'une boucle de contrôle feedforward.
+        </p>
+        <div class="neural-stats">
+          <div class="neural-stat">
+            <div class="neural-stat-val">1000×</div>
+            <div class="neural-stat-label">Plus rapide que CFD</div>
+          </div>
+          <div class="neural-stat">
+            <div class="neural-stat-val">100+</div>
+            <div class="neural-stat-label">Configs / nuit</div>
+          </div>
+          <div class="neural-stat">
+            <div class="neural-stat-val">&lt;1%</div>
+            <div class="neural-stat-label">Erreur vs solveur</div>
+          </div>
+          <div class="neural-stat">
+            <div class="neural-stat-val">μs</div>
+            <div class="neural-stat-label">Temps d'inférence</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PCB / ÉLECTRONIQUE ============ -->
+<section class="pcb-section" id="pcb">
+  <div class="container">
+    <div class="pcb-grid reveal">
+      <div class="pcb-text">
+        <span class="label">04 — Électronique embarquée</span>
+        <h3 style="margin-top: 1rem;">Le système nerveux<br>du <span class="accent">Marlin.</span></h3>
+        <p>
+          Notre PCB custom centralise l'acquisition de données, le contrôle des actionneurs et la télémétrie. Conçu pour résister aux conditions extrêmes du foiling — vibrations, embruns, accélérations brutales.
+        </p>
+        <p>
+          L'architecture dual-processeur (ESP32 + CM5) sépare les tâches critiques temps réel des calculs lourds d'inférence IA.
+        </p>
+        <div class="pcb-specs">
+          <div class="pcb-spec">
+            <span class="pcb-spec-name">MCU</span>
+            <span class="pcb-spec-val">ESP32-S3 · Lecture capteurs & réflexes rapides</span>
+          </div>
+          <div class="pcb-spec">
+            <span class="pcb-spec-name">SBC</span>
+            <span class="pcb-spec-val">Raspberry CM5 · Calcul lourd & logging SSD</span>
+          </div>
+          <div class="pcb-spec">
+            <span class="pcb-spec-name">AI</span>
+            <span class="pcb-spec-val">AI HAT · Inférence NN embarquée temps réel</span>
+          </div>
+          <div class="pcb-spec">
+            <span class="pcb-spec-name">COMM</span>
+            <span class="pcb-spec-val">LoRa 868 MHz · Télémétrie longue portée</span>
+          </div>
+        </div>
+      </div>
+      <div class="pcb-visual">
+        <div class="pcb-placeholder-content">
+          <div class="pcb-chip">
+            <div class="pcb-chip-label">MARLIN<br>PCB v1.0</div>
+          </div>
+          <div class="pcb-status">
+            <span class="blink"></span>
+            En conception · KiCad
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ PHASES R&D ============ -->
 <section class="phases" id="phases">
   <div class="container">
     <div class="section-head reveal">
-      <span class="label">03 — Notre approche R&amp;D</span>
+      <span class="label">05 — Notre approche R&amp;D</span>
       <h2>Trois saisons,<br>une vision<span class="accent">.</span></h2>
     </div>
     <div class="phases-track reveal">
@@ -1037,7 +1612,7 @@ footer {
 <section class="equipe" id="equipe">
   <div class="container">
     <div class="section-head reveal">
-      <span class="label">04 — Notre équipe</span>
+      <span class="label">06 — Notre équipe</span>
       <h2>Multidisciplinaires,<br>passionnés, basés à <span class="accent">Sherbrooke.</span></h2>
     </div>
 
@@ -1072,13 +1647,12 @@ footer {
     <div class="team-group reveal">
       <div class="team-group-head">
         <h3>Intelligence artificielle &amp; Données</h3>
-        <span class="count">— 04 membres</span>
+        <span class="count">— 03 membres</span>
       </div>
       <div class="team-grid">
-        <div class="member"><div class="member-photo"><div class="placeholder-icon">A1</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Lead IA</div></div>
-        <div class="member"><div class="member-photo"><div class="placeholder-icon">A2</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">CFD &amp; simulation</div></div>
-        <div class="member"><div class="member-photo"><div class="placeholder-icon">A3</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Réseaux de neurones</div></div>
-        <div class="member"><div class="member-photo"><div class="placeholder-icon">A4</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Dashboard &amp; data</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">SD</div></div><div class="member-name">Samuel Dubuc</div><div class="member-role">Équipier IA</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">XB</div></div><div class="member-name">Xavier Bouter</div><div class="member-role">Équipier IA</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">MH</div></div><div class="member-name">Mathys Houde</div><div class="member-role">Équipier IA</div></div>
       </div>
     </div>
 
@@ -1100,7 +1674,7 @@ footer {
 <section class="sponsors" id="sponsors">
   <div class="container">
     <div class="section-head reveal" style="text-align: center;">
-      <span class="label">05 — Partenariats</span>
+      <span class="label">07 — Partenariats</span>
       <h2 style="margin: 0 auto;">Bâtissons Marlin <span class="accent">ensemble.</span></h2>
     </div>
 
@@ -1108,15 +1682,48 @@ footer {
       Nos partenaires nous fournissent matériaux, expertise technique, et soutien financier. En retour, ils accèdent à nos meilleurs étudiants, à une visibilité internationale au lac de Garde, et à une plateforme R&amp;D unique au Québec.
     </p>
 
-    <div class="sponsors-grid reveal">
-      <div class="sponsor-slot">[Logo partenaire]</div>
-      <div class="sponsor-slot">[Logo partenaire]</div>
-      <div class="sponsor-slot">[Logo partenaire]</div>
-      <div class="sponsor-slot">[Logo partenaire]</div>
-      <div class="sponsor-slot">[Logo partenaire]</div>
-      <div class="sponsor-slot">[Logo partenaire]</div>
-      <div class="sponsor-slot">[Logo partenaire]</div>
-      <div class="sponsor-slot">[Logo partenaire]</div>
+    <div class="sponsors-showcase reveal">
+      <!-- Platine tier -->
+      <div class="sponsor-tier tier-platine">
+        <div class="sponsor-tier-label"><span class="tier-icon"></span> Platine</div>
+        <div class="sponsor-tier-line"></div>
+        <div class="sponsor-tier-grid">
+          <a href="https://www.sumoth.org" target="_blank" rel="noopener" class="sponsor-card">
+            <img src="media/SuMoTh.png" alt="SuMoTh Challenge">
+          </a>
+          <a href="#sponsors" class="sponsor-card">
+            <span class="sponsor-empty">Votre logo ici</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Or tier -->
+      <div class="sponsor-tier tier-or">
+        <div class="sponsor-tier-label"><span class="tier-icon"></span> Or</div>
+        <div class="sponsor-tier-line"></div>
+        <div class="sponsor-tier-grid">
+          <a href="https://www.riotinto.com" target="_blank" rel="noopener" class="sponsor-card">
+            <img src="media/RioTinto.png" alt="Rio Tinto">
+          </a>
+          <a href="#sponsors" class="sponsor-card">
+            <span class="sponsor-empty">Votre logo ici</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Argent tier -->
+      <div class="sponsor-tier tier-argent">
+        <div class="sponsor-tier-label"><span class="tier-icon"></span> Argent</div>
+        <div class="sponsor-tier-line"></div>
+        <div class="sponsor-tier-grid">
+          <a href="#sponsors" class="sponsor-card">
+            <span class="sponsor-empty">Votre logo ici</span>
+          </a>
+          <a href="#sponsors" class="sponsor-card">
+            <span class="sponsor-empty">Votre logo ici</span>
+          </a>
+        </div>
+      </div>
     </div>
 
     <div class="tiers reveal">
@@ -1169,7 +1776,9 @@ footer {
       <h4>Naviguer</h4>
       <a href="#defi">Le défi</a>
       <a href="#bateau">Le bateau</a>
-      <a href="#phases">Notre R&amp;D</a>
+      <a href="#neural">R&amp;D / IA</a>
+      <a href="#pcb">Électronique</a>
+      <a href="#phases">Phases</a>
       <a href="#equipe">Équipe</a>
       <a href="#sponsors">Sponsors</a>
     </div>
@@ -1206,20 +1815,19 @@ const io = new IntersectionObserver((entries) => {
 }, { threshold: 0.15 });
 reveals.forEach(el => io.observe(el));
 
-// ============ HERO PARTICLES (sonar / data points) ============
+// ============ HERO PARTICLES ============
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
-let particles = [];
+let heroParticles = [];
 let w, h;
 
 function resize() {
   w = canvas.width = canvas.offsetWidth;
   h = canvas.height = canvas.offsetHeight;
-  // Reseed on resize for proper distribution
-  particles = [];
+  heroParticles = [];
   const count = Math.floor((w * h) / 18000);
   for (let i = 0; i < count; i++) {
-    particles.push({
+    heroParticles.push({
       x: Math.random() * w,
       y: Math.random() * h,
       vx: (Math.random() - 0.5) * 0.2,
@@ -1232,16 +1840,13 @@ function resize() {
 resize();
 window.addEventListener('resize', resize);
 
-function draw() {
+function drawHero() {
   ctx.clearRect(0, 0, w, h);
-
-  // Lines between near particles
-  for (let i = 0; i < particles.length; i++) {
-    const p = particles[i];
-    for (let j = i + 1; j < particles.length; j++) {
-      const q = particles[j];
-      const dx = p.x - q.x;
-      const dy = p.y - q.y;
+  for (let i = 0; i < heroParticles.length; i++) {
+    const p = heroParticles[i];
+    for (let j = i + 1; j < heroParticles.length; j++) {
+      const q = heroParticles[j];
+      const dx = p.x - q.x, dy = p.y - q.y;
       const d = Math.sqrt(dx * dx + dy * dy);
       if (d < 130) {
         ctx.strokeStyle = `rgba(0, 225, 255, ${(1 - d / 130) * 0.15})`;
@@ -1253,24 +1858,120 @@ function draw() {
       }
     }
   }
-
-  // Particles
-  particles.forEach(p => {
-    p.x += p.vx;
-    p.y += p.vy;
-    if (p.x < 0) p.x = w;
-    if (p.x > w) p.x = 0;
-    if (p.y < 0) p.y = h;
-    if (p.y > h) p.y = 0;
+  heroParticles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+    if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
     ctx.fillStyle = `rgba(0, 225, 255, ${p.a})`;
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
     ctx.fill();
   });
-
-  requestAnimationFrame(draw);
+  requestAnimationFrame(drawHero);
 }
-draw();
+drawHero();
+
+// ============ NEURAL NETWORK ANIMATION ============
+const nc = document.getElementById('neural-canvas');
+const nctx = nc.getContext('2d');
+
+const layers = [4, 8, 12, 8, 4, 2];
+let neurons = [];
+let synapses = [];
+let nw, nh;
+
+function resizeNeural() {
+  nw = nc.width = nc.parentElement.offsetWidth;
+  nh = nc.height = nc.parentElement.offsetHeight;
+  neurons = [];
+  synapses = [];
+
+  const padX = 60, padY = 50;
+  const layerGap = (nw - padX * 2) / (layers.length - 1);
+
+  layers.forEach((count, li) => {
+    const x = padX + li * layerGap;
+    const neuronGap = (nh - padY * 2) / (count + 1);
+    for (let ni = 0; ni < count; ni++) {
+      const y = padY + neuronGap * (ni + 1);
+      neurons.push({
+        x, y, layer: li,
+        pulse: Math.random() * Math.PI * 2,
+        r: li === 0 || li === layers.length - 1 ? 5 : 4
+      });
+    }
+  });
+
+  for (let i = 0; i < neurons.length; i++) {
+    for (let j = 0; j < neurons.length; j++) {
+      if (neurons[j].layer === neurons[i].layer + 1) {
+        synapses.push({
+          from: i, to: j,
+          signal: Math.random(),
+          speed: 0.002 + Math.random() * 0.008,
+          active: Math.random() > 0.3
+        });
+      }
+    }
+  }
+}
+resizeNeural();
+window.addEventListener('resize', resizeNeural);
+
+let neuralTime = 0;
+function drawNeural() {
+  nctx.clearRect(0, 0, nw, nh);
+  neuralTime += 0.016;
+
+  synapses.forEach(s => {
+    if (!s.active) return;
+    const a = neurons[s.from], b = neurons[s.to];
+    s.signal = (s.signal + s.speed) % 1;
+
+    nctx.strokeStyle = 'rgba(0, 225, 255, 0.08)';
+    nctx.lineWidth = 0.5;
+    nctx.beginPath();
+    nctx.moveTo(a.x, a.y);
+    nctx.lineTo(b.x, b.y);
+    nctx.stroke();
+
+    const sx = a.x + (b.x - a.x) * s.signal;
+    const sy = a.y + (b.y - a.y) * s.signal;
+    nctx.fillStyle = 'rgba(0, 225, 255, 0.6)';
+    nctx.beginPath();
+    nctx.arc(sx, sy, 1.5, 0, Math.PI * 2);
+    nctx.fill();
+  });
+
+  neurons.forEach(n => {
+    const glow = 0.3 + 0.3 * Math.sin(neuralTime * 2 + n.pulse);
+    const isIO = n.layer === 0 || n.layer === layers.length - 1;
+    const color = isIO ? `rgba(255, 107, 53, ${glow + 0.3})` : `rgba(0, 225, 255, ${glow + 0.2})`;
+
+    nctx.shadowBlur = 12;
+    nctx.shadowColor = isIO ? 'rgba(255,107,53,0.4)' : 'rgba(0,225,255,0.3)';
+    nctx.fillStyle = color;
+    nctx.beginPath();
+    nctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    nctx.fill();
+    nctx.shadowBlur = 0;
+  });
+
+  // Layer labels
+  nctx.font = '9px JetBrains Mono';
+  nctx.textAlign = 'center';
+  const labelY = nh - 15;
+  const padX = 60;
+  const layerGap = (nw - padX * 2) / (layers.length - 1);
+  const labels = ['ENTRÉE', 'COUCHE 1', 'COUCHE 2', 'COUCHE 3', 'COUCHE 4', 'SORTIE'];
+  labels.forEach((l, i) => {
+    nctx.fillStyle = i === 0 || i === labels.length - 1 ? 'rgba(255,107,53,0.6)' : 'rgba(0,225,255,0.4)';
+    nctx.fillText(l, padX + i * layerGap, labelY);
+  });
+
+  requestAnimationFrame(drawNeural);
+}
+drawNeural();
 </script>
 
 </body>
