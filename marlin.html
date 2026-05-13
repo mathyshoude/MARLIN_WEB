@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARLIN — Université de Sherbrooke</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --abyss: #03101a;
+  --deep: #061b2e;
+  --ocean: #0a3b5c;
+  --surface: #1a6e9c;
+  --signal: #00e1ff;
+  --signal-dim: #4aa3c4;
+  --foam: #e8f4f8;
+  --foam-dim: #94adb8;
+  --rust: #ff6b35;
+  --grid: rgba(0, 225, 255, 0.06);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--abyss);
+  color: var(--foam);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 300;
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+.mono { font-family: 'JetBrains Mono', monospace; font-weight: 400; letter-spacing: 0.02em; }
+.display { font-family: 'Archivo', sans-serif; font-weight: 900; letter-spacing: -0.03em; line-height: 0.95; }
+.label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--signal);
+}
+
+/* ============ NAV ============ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.5rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(3,16,26,0.9) 0%, rgba(3,16,26,0) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: padding 0.3s ease;
+}
+nav.scrolled { padding: 1rem 3rem; background: rgba(3,16,26,0.85); }
+
+.logo {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: 1.5rem;
+  letter-spacing: 0.2em;
+  color: var(--foam);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.logo-mark {
+  width: 28px; height: 28px;
+  border: 1.5px solid var(--signal);
+  position: relative;
+  transform: rotate(45deg);
+}
+.logo-mark::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid var(--signal-dim);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--foam);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+  position: relative;
+  padding-bottom: 4px;
+}
+.nav-links a:hover { color: var(--signal); }
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 1px;
+  background: var(--signal);
+  transition: width 0.3s ease;
+}
+.nav-links a:hover::after { width: 100%; }
+
+.lang {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--foam-dim);
+  border: 1px solid var(--foam-dim);
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.lang:hover { border-color: var(--signal); color: var(--signal); }
+
+/* ============ GRID OVERLAY (engineering vibe) ============ */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============ HERO ============ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 0 3rem;
+  overflow: hidden;
+  z-index: 2;
+}
+
+/* Ocean depth gradient layer */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 100%, var(--ocean) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 30% 40%, rgba(26,110,156,0.4) 0%, transparent 60%),
+    linear-gradient(to bottom, var(--abyss) 0%, var(--deep) 60%, var(--ocean) 100%);
+  z-index: -1;
+}
+
+/* Animated canvas for the particle/sonar effect — will sit under content */
+#particles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 2rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid rgba(0,225,255,0.3);
+  background: rgba(0,225,255,0.05);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--signal);
+}
+.hero-tag .dot {
+  width: 6px; height: 6px;
+  background: var(--signal);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,225,255,0.7); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 8px rgba(0,225,255,0); }
+}
+
+.hero h1 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: clamp(4rem, 14vw, 11rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--foam) 0%, var(--signal) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-sub {
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  font-weight: 300;
+  color: var(--foam-dim);
+  max-width: 600px;
+  margin-bottom: 3rem;
+  line-height: 1.5;
+}
+.hero-sub strong { color: var(--foam); font-weight: 500; }
+
+.hero-cta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.9rem 1.8rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  text-decoration: none;
+  border: 1px solid var(--foam);
+  color: var(--foam);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--signal);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: -1;
+}
+.btn:hover { color: var(--abyss); border-color: var(--signal); }
+.btn:hover::before { transform: translateX(0); }
+.btn.primary { border-color: var(--signal); color: var(--signal); }
+.btn.primary:hover { color: var(--abyss); }
+.btn-arrow { transition: transform 0.3s; }
+.btn:hover .btn-arrow { transform: translateX(4px); }
+
+.hero-meta {
+  position: absolute;
+  bottom: 3rem; left: 3rem; right: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  z-index: 3;
+  pointer-events: none;
+}
+.hero-meta .item {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--foam-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+.hero-meta .item span { color: var(--signal); display: block; margin-top: 0.3rem; font-size: 0.85rem; }
+
+.scroll-cue {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px; height: 40px;
+  border: 1px solid var(--foam-dim);
+  border-radius: 12px;
+  z-index: 3;
+}
+.scroll-cue::before {
+  content: '';
+  position: absolute;
+  top: 8px; left: 50%;
+  transform: translateX(-50%);
+  width: 2px; height: 8px;
+  background: var(--signal);
+  border-radius: 1px;
+  animation: scroll-down 2s infinite;
+}
+@keyframes scroll-down {
+  0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+  100% { transform: translateX(-50%) translateY(14px); opacity: 0; }
+}
+
+/* ============ SECTIONS BASE ============ */
+section {
+  position: relative;
+  padding: 8rem 3rem;
+  z-index: 2;
+}
+.container { max-width: 1200px; margin: 0 auto; }
+.section-head { margin-bottom: 5rem; }
+.section-head .label { display: block; margin-bottom: 1rem; }
+.section-head h2 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 4.5vw, 4rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  max-width: 900px;
+}
+.section-head h2 .accent { color: var(--signal); }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ============ DEFI SECTION ============ */
+.defi {
+  background: linear-gradient(to bottom, var(--abyss) 0%, var(--deep) 100%);
+}
+.defi-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.defi-text p {
+  font-size: 1.15rem;
+  color: var(--foam-dim);
+  margin-bottom: 1.5rem;
+  max-width: 540px;
+}
+.defi-text p strong { color: var(--foam); font-weight: 500; }
+.defi-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.stat {
+  border-left: 2px solid var(--signal);
+  padding: 1rem 0 1rem 1.5rem;
+}
+.stat-num {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--foam);
+  margin-bottom: 0.5rem;
+}
+.stat-num .unit { font-size: 1.2rem; color: var(--signal-dim); font-weight: 500; }
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--foam-dim);
+}
+
+/* ============ BATEAU SECTION (with CAD placeholder) ============ */
+.bateau {
+  background: var(--deep);
+  position: relative;
+  overflow: hidden;
+}
+.bateau::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%; height: 80%;
+  background: radial-gradient(circle, rgba(0,225,255,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.cad-stage {
+  position: relative;
+  height: 500px;
+  margin: 3rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cad-placeholder {
+  width: 100%;
+  max-width: 700px;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cad-rings {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cad-rings::before, .cad-rings::after {
+  content: '';
+  position: absolute;
+  border: 1px solid rgba(0,225,255,0.2);
+  border-radius: 50%;
+}
+.cad-rings::before {
+  width: 380px; height: 380px;
+  animation: spin 60s linear infinite;
+  border-top-color: var(--signal);
+  border-right-color: transparent;
+}
+.cad-rings::after {
+  width: 280px; height: 280px;
+  animation: spin 40s linear infinite reverse;
+  border-bottom-color: var(--signal-dim);
+  border-left-color: transparent;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.cad-model {
+  position: relative;
+  animation: float 6s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.cad-controls {
+  position: absolute;
+  bottom: 2rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--foam-dim);
+}
+.cad-controls .btn-icon {
+  width: 36px; height: 36px;
+  border: 1px solid var(--foam-dim);
+  background: rgba(3,16,26,0.6);
+  color: var(--foam);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cad-controls .btn-icon:hover { border-color: var(--signal); color: var(--signal); }
+
+.cad-coords {
+  position: absolute;
+  top: 1.5rem; right: 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--signal-dim);
+  text-align: right;
+  line-height: 1.6;
+}
+.cad-coords .v { color: var(--signal); }
+
+/* Subsystem cards */
+.subsystems {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 5rem;
+}
+.subsys-card {
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 2rem 1.8rem;
+  background: rgba(10,59,92,0.2);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+.subsys-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 0; height: 2px;
+  background: var(--signal);
+  transition: width 0.4s ease;
+}
+.subsys-card:hover { border-color: var(--signal); transform: translateY(-4px); }
+.subsys-card:hover::before { width: 100%; }
+.subsys-card .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--signal);
+  margin-bottom: 1.5rem;
+}
+.subsys-card h3 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.01em;
+}
+.subsys-card p {
+  font-size: 0.9rem;
+  color: var(--foam-dim);
+  line-height: 1.6;
+}
+
+/* ============ PHASES R&D ============ */
+.phases {
+  background: linear-gradient(to bottom, var(--deep) 0%, var(--abyss) 100%);
+}
+.phases-track {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-top: 4rem;
+  position: relative;
+}
+.phases-track::before {
+  content: '';
+  position: absolute;
+  top: 30px; left: 5%; right: 5%;
+  height: 1px;
+  background: linear-gradient(to right, var(--signal) 0%, var(--signal-dim) 50%, rgba(74,163,196,0.3) 100%);
+}
+.phase {
+  position: relative;
+  padding: 0 1.5rem;
+  text-align: left;
+}
+.phase-num {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.phase-dot {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: var(--abyss);
+  border: 2px solid var(--signal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  color: var(--signal);
+  font-size: 1.3rem;
+  position: relative;
+  z-index: 2;
+}
+.phase:nth-child(2) .phase-dot { border-color: var(--signal-dim); color: var(--signal-dim); }
+.phase:nth-child(3) .phase-dot { border-color: rgba(74,163,196,0.4); color: rgba(74,163,196,0.7); }
+
+.phase-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--foam-dim);
+  letter-spacing: 0.15em;
+}
+.phase h3 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+.phase h3 .accent { color: var(--signal); }
+.phase p {
+  color: var(--foam-dim);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ============ EQUIPE ============ */
+.equipe {
+  background: var(--abyss);
+}
+.team-group { margin-bottom: 4rem; }
+.team-group-head {
+  display: flex;
+  align-items: baseline;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.team-group-head h3 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
+}
+.team-group-head .count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--signal);
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+.member {
+  text-align: left;
+}
+.member-photo {
+  width: 100%;
+  aspect-ratio: 4/5;
+  background: linear-gradient(135deg, var(--ocean) 0%, var(--deep) 100%);
+  margin-bottom: 0.9rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.member-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(3,16,26,0.7) 0%, transparent 50%);
+}
+.member-photo .placeholder-icon {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: 2rem;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.1em;
+}
+.member:hover .member-photo { transform: translateY(-4px); }
+.member:hover .member-photo .placeholder-icon { color: var(--signal); }
+.member-name {
+  font-weight: 500;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+}
+.member-role {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--signal-dim);
+}
+
+/* ============ SPONSORS ============ */
+.sponsors {
+  background: var(--deep);
+  text-align: center;
+}
+.sponsors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 4rem 0;
+}
+.sponsor-slot {
+  aspect-ratio: 16/9;
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--foam-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  transition: all 0.3s;
+}
+.sponsor-slot:hover { border-color: var(--signal); color: var(--signal); }
+
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+  text-align: left;
+}
+.tier {
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 2rem 1.5rem;
+  background: rgba(3,16,26,0.4);
+}
+.tier-name {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: 1.2rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.tier:nth-child(1) .tier-name { color: var(--foam-dim); }
+.tier:nth-child(2) .tier-name { color: var(--signal-dim); }
+.tier:nth-child(3) .tier-name { color: var(--signal); }
+.tier-amount {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--foam-dim);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.tier ul { list-style: none; }
+.tier li {
+  font-size: 0.85rem;
+  color: var(--foam-dim);
+  padding: 0.4rem 0 0.4rem 1.2rem;
+  position: relative;
+}
+.tier li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--signal);
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: var(--abyss);
+  padding: 5rem 3rem 2rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  position: relative;
+  z-index: 2;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 4rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.footer-brand h3 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: 2.5rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+.footer-brand p {
+  color: var(--foam-dim);
+  max-width: 380px;
+  font-size: 0.95rem;
+}
+.footer-col h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--signal);
+  margin-bottom: 1.5rem;
+}
+.footer-col a {
+  display: block;
+  color: var(--foam-dim);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.4rem 0;
+  transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--signal); }
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--foam-dim);
+  letter-spacing: 0.1em;
+}
+
+/* ============ MOBILE ============ */
+@media (max-width: 820px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  section { padding: 5rem 1.5rem; }
+  .hero { padding: 0 1.5rem; }
+  .hero-meta { left: 1.5rem; right: 1.5rem; bottom: 1.5rem; flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .defi-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .phases-track { grid-template-columns: 1fr; gap: 3rem; }
+  .phases-track::before { display: none; }
+  .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .footer-bottom { flex-direction: column; gap: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- ============ NAVIGATION ============ -->
+<nav id="nav">
+  <a href="#" class="logo">
+    <span class="logo-mark"></span>
+    MARLIN
+  </a>
+  <ul class="nav-links">
+    <li><a href="#defi">Le défi</a></li>
+    <li><a href="#bateau">Technologie</a></li>
+    <li><a href="#phases">R&amp;D</a></li>
+    <li><a href="#equipe">Équipe</a></li>
+    <li><a href="#sponsors">Sponsors</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="lang">FR / EN</button>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <canvas id="particles"></canvas>
+  <div class="hero-content">
+    <div class="hero-tag">
+      <span class="dot"></span>
+      SuMoTh International Challenge · 2026 — 2027
+    </div>
+    <h1 class="display">MARLIN</h1>
+    <p class="hero-sub">
+      Le premier Moth <strong>instinctif</strong>.<br>
+      Conçu, instrumenté et piloté par les étudiants de l'<strong>Université de Sherbrooke</strong>.
+    </p>
+    <div class="hero-cta">
+      <a href="#bateau" class="btn primary">
+        Découvrir le projet
+        <span class="btn-arrow">→</span>
+      </a>
+      <a href="#sponsors" class="btn">
+        Devenir partenaire
+      </a>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <div class="item">
+      Basé à<span>Sherbrooke, QC</span>
+    </div>
+    <div class="item">
+      Prochaine compétition<span>Lac de Garde, Italie</span>
+    </div>
+    <div class="item">
+      Statut<span style="color: var(--signal);">● En développement</span>
+    </div>
+  </div>
+  <div class="scroll-cue"></div>
+</section>
+
+<!-- ============ LE DÉFI ============ -->
+<section class="defi" id="defi">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="label">01 — La compétition</span>
+      <h2>Le SuMoTh Challenge.<br><span class="accent">Le foil étudiant le plus durable au monde.</span></h2>
+    </div>
+    <div class="defi-grid reveal">
+      <div class="defi-text">
+        <p>
+          Le <strong>SuMoTh International Challenge</strong> oppose chaque année les meilleures équipes universitaires sur la conception et la construction d'un <strong>bateau à foils de classe Moth</strong> — l'un des dériveurs les plus extrêmes au monde, capable d'atteindre 30 nœuds en glissant à 60 cm au-dessus de l'eau.
+        </p>
+        <p>
+          Le jury évalue chaque équipe sur quatre piliers : <strong>durabilité</strong> des matériaux et procédés, <strong>innovation</strong> technique, <strong>qualité de la conception</strong>, et <strong>performance en eau</strong>. Voler n'est pas suffisant : il faut voler intelligemment, économiquement, et savoir le démontrer.
+        </p>
+      </div>
+      <div class="defi-stats">
+        <div class="stat">
+          <div class="stat-num">30<span class="unit"> nds</span></div>
+          <div class="stat-label">Vitesse cible</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">60<span class="unit"> cm</span></div>
+          <div class="stat-label">Hauteur de vol</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">15+</div>
+          <div class="stat-label">Équipes mondiales</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">04</div>
+          <div class="stat-label">Critères de jugement</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LE BATEAU ============ -->
+<section class="bateau" id="bateau">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="label">02 — Notre bateau</span>
+      <h2>Un Moth qui apprend de chaque sortie.</h2>
+    </div>
+
+    <!-- CAD MODEL PLACEHOLDER -->
+    <div class="cad-stage reveal">
+      <div class="cad-coords">
+        MODEL · MARLIN_V1.STEP<br>
+        <span class="v">X</span> 0.000  <span class="v">Y</span> 0.000  <span class="v">Z</span> 0.420<br>
+        SCALE 1:8 · POLY 12.4K
+      </div>
+      <div class="cad-placeholder">
+        <div class="cad-rings"></div>
+        <div class="cad-model">
+          <!-- Stylized wireframe boat SVG -->
+          <svg width="500" height="280" viewBox="0 0 500 280" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 30px rgba(0,225,255,0.3));">
+            <!-- Hull -->
+            <path d="M 60 140 Q 150 100 250 95 Q 360 90 440 140 Q 360 160 250 165 Q 150 165 60 140 Z"
+                  stroke="#00e1ff" stroke-width="1.2" fill="rgba(0,225,255,0.04)"/>
+            <!-- Hull contour lines -->
+            <path d="M 90 138 Q 200 122 410 138" stroke="#4aa3c4" stroke-width="0.6" fill="none" opacity="0.5"/>
+            <path d="M 90 142 Q 200 152 410 142" stroke="#4aa3c4" stroke-width="0.6" fill="none" opacity="0.5"/>
+            <!-- Cross sections -->
+            <ellipse cx="150" cy="140" rx="6" ry="15" stroke="#4aa3c4" stroke-width="0.5" fill="none" opacity="0.6"/>
+            <ellipse cx="250" cy="140" rx="8" ry="22" stroke="#4aa3c4" stroke-width="0.5" fill="none" opacity="0.6"/>
+            <ellipse cx="350" cy="140" rx="6" ry="18" stroke="#4aa3c4" stroke-width="0.5" fill="none" opacity="0.6"/>
+            <!-- Mast -->
+            <line x1="250" y1="100" x2="250" y2="20" stroke="#00e1ff" stroke-width="1.5"/>
+            <line x1="250" y1="20" x2="250" y2="15" stroke="#00e1ff" stroke-width="3"/>
+            <!-- Sail (triangle) -->
+            <path d="M 250 25 L 250 100 L 330 85 Z" stroke="#00e1ff" stroke-width="1" fill="rgba(0,225,255,0.06)"/>
+            <path d="M 250 50 L 305 70" stroke="#4aa3c4" stroke-width="0.5" opacity="0.6"/>
+            <path d="M 250 75 L 318 80" stroke="#4aa3c4" stroke-width="0.5" opacity="0.6"/>
+            <!-- Vertical strut down -->
+            <line x1="250" y1="160" x2="250" y2="220" stroke="#00e1ff" stroke-width="1.5"/>
+            <!-- Main foil (horizontal underwater) -->
+            <path d="M 195 220 Q 250 215 305 220 Q 250 225 195 220 Z"
+                  stroke="#ff6b35" stroke-width="1.2" fill="rgba(255,107,53,0.08)"/>
+            <line x1="195" y1="220" x2="305" y2="220" stroke="#ff6b35" stroke-width="0.5" opacity="0.6"/>
+            <!-- Rudder foil -->
+            <line x1="430" y1="160" x2="430" y2="210" stroke="#00e1ff" stroke-width="1.2"/>
+            <path d="M 400 210 Q 430 207 460 210 Q 430 213 400 210 Z"
+                  stroke="#ff6b35" stroke-width="1" fill="rgba(255,107,53,0.08)"/>
+            <!-- Water line -->
+            <line x1="20" y1="245" x2="480" y2="245" stroke="#1a6e9c" stroke-width="0.5" stroke-dasharray="3 3" opacity="0.6"/>
+            <!-- Annotations -->
+            <text x="340" y="55" font-family="JetBrains Mono" font-size="9" fill="#00e1ff" opacity="0.8">VOILE</text>
+            <text x="330" y="220" font-family="JetBrains Mono" font-size="9" fill="#ff6b35" opacity="0.8">FOIL PRINCIPAL</text>
+            <text x="475" y="215" font-family="JetBrains Mono" font-size="9" fill="#ff6b35" opacity="0.8" text-anchor="end">SAFRAN</text>
+            <text x="55" y="155" font-family="JetBrains Mono" font-size="9" fill="#00e1ff" opacity="0.8">COQUE</text>
+          </svg>
+        </div>
+      </div>
+      <div class="cad-controls">
+        <span>Interactif</span>
+        <button class="btn-icon" title="Rotation">↺</button>
+        <button class="btn-icon" title="Vue éclatée">⊟</button>
+        <button class="btn-icon" title="Plein écran">⤢</button>
+        <span>· Modèle 3D temps réel</span>
+      </div>
+    </div>
+
+    <!-- Subsystems -->
+    <div class="subsystems reveal">
+      <div class="subsys-card">
+        <div class="num">/ 01</div>
+        <h3>Hydrodynamique</h3>
+        <p>Profils de foils optimisés par CFD (OpenFOAM) et validation au bassin. L'objectif : ratio portance / traînée maximal sur la plage de vol.</p>
+      </div>
+      <div class="subsys-card">
+        <div class="num">/ 02</div>
+        <h3>Système embarqué</h3>
+        <p>ESP32 pour la lecture capteurs temps réel, CM5 pour le calcul lourd, télémétrie radio vers la station terrestre. Étanchéité IP67.</p>
+      </div>
+      <div class="subsys-card">
+        <div class="num">/ 03</div>
+        <h3>Intelligence artificielle</h3>
+        <p>Réseau de neurones entraîné sur les simulations CFD pour estimer les forces hydrodynamiques en temps réel. Substitut au solveur, 1000× plus rapide.</p>
+      </div>
+      <div class="subsys-card">
+        <div class="num">/ 04</div>
+        <h3>Acquisition de données</h3>
+        <p>Loggers haute fréquence, dashboard temps réel, replay post-course. Chaque sortie alimente le digital twin de l'équipe.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PHASES R&D ============ -->
+<section class="phases" id="phases">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="label">03 — Notre approche R&amp;D</span>
+      <h2>Trois saisons,<br>une vision<span class="accent">.</span></h2>
+    </div>
+    <div class="phases-track reveal">
+      <div class="phase">
+        <div class="phase-num">
+          <div class="phase-dot">01</div>
+          <div class="phase-year">2025 / 2026</div>
+        </div>
+        <h3>Le bateau qui<br><span class="accent">se souvient.</span></h3>
+        <p>Plateforme d'acquisition fiable, télémétrie temps réel, logs haute qualité. Chaque sortie devient une donnée exploitable. L'infrastructure data-driven prend racine.</p>
+      </div>
+      <div class="phase">
+        <div class="phase-num">
+          <div class="phase-dot">02</div>
+          <div class="phase-year">2026 / 2027</div>
+        </div>
+        <h3>Le bateau qui<br><span class="accent">se comprend.</span></h3>
+        <p>Le réseau de neurones entre en scène. Analyse hors-ligne, diagnostic, tableau de bord pilote. L'équipe itère 10× plus vite sur les profils de foil.</p>
+      </div>
+      <div class="phase">
+        <div class="phase-num">
+          <div class="phase-dot">03</div>
+          <div class="phase-year">2027 +</div>
+        </div>
+        <h3>Le bateau qui<br><span class="accent">anticipe.</span></h3>
+        <p>Contrôle actif des actionneurs. L'IA stabilise le vol et corrige avant le pilote. Le Moth ne réagit plus — il anticipe.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ÉQUIPE ============ -->
+<section class="equipe" id="equipe">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="label">04 — Notre équipe</span>
+      <h2>Multidisciplinaires,<br>passionnés, basés à <span class="accent">Sherbrooke.</span></h2>
+    </div>
+
+    <div class="team-group reveal">
+      <div class="team-group-head">
+        <h3>Hydrodynamique &amp; Mécanique</h3>
+        <span class="count">— 06 membres</span>
+      </div>
+      <div class="team-grid">
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">M1</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Chef de projet</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">M2</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Concepteur foil</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">M3</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Structure coque</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">M4</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Composites</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">M5</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Voile &amp; gréement</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">M6</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Test &amp; validation</div></div>
+      </div>
+    </div>
+
+    <div class="team-group reveal">
+      <div class="team-group-head">
+        <h3>Électronique embarquée</h3>
+        <span class="count">— 04 membres</span>
+      </div>
+      <div class="team-grid">
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">E1</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Lead système embarqué</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">E2</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Conception PCB</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">E3</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Capteurs &amp; étanchéité</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">E4</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Télémétrie radio</div></div>
+      </div>
+    </div>
+
+    <div class="team-group reveal">
+      <div class="team-group-head">
+        <h3>Intelligence artificielle &amp; Données</h3>
+        <span class="count">— 04 membres</span>
+      </div>
+      <div class="team-grid">
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">A1</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Lead IA</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">A2</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">CFD &amp; simulation</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">A3</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Réseaux de neurones</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">A4</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Dashboard &amp; data</div></div>
+      </div>
+    </div>
+
+    <div class="team-group reveal">
+      <div class="team-group-head">
+        <h3>Affaires &amp; Communication</h3>
+        <span class="count">— 03 membres</span>
+      </div>
+      <div class="team-grid">
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">C1</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Lead partenariats</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">C2</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Communications</div></div>
+        <div class="member"><div class="member-photo"><div class="placeholder-icon">C3</div></div><div class="member-name">[Nom du membre]</div><div class="member-role">Médias &amp; contenu</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPONSORS ============ -->
+<section class="sponsors" id="sponsors">
+  <div class="container">
+    <div class="section-head reveal" style="text-align: center;">
+      <span class="label">05 — Partenariats</span>
+      <h2 style="margin: 0 auto;">Bâtissons Marlin <span class="accent">ensemble.</span></h2>
+    </div>
+
+    <p class="reveal" style="max-width: 700px; margin: 0 auto 3rem; color: var(--foam-dim); font-size: 1.1rem; text-align: center;">
+      Nos partenaires nous fournissent matériaux, expertise technique, et soutien financier. En retour, ils accèdent à nos meilleurs étudiants, à une visibilité internationale au lac de Garde, et à une plateforme R&amp;D unique au Québec.
+    </p>
+
+    <div class="sponsors-grid reveal">
+      <div class="sponsor-slot">[Logo partenaire]</div>
+      <div class="sponsor-slot">[Logo partenaire]</div>
+      <div class="sponsor-slot">[Logo partenaire]</div>
+      <div class="sponsor-slot">[Logo partenaire]</div>
+      <div class="sponsor-slot">[Logo partenaire]</div>
+      <div class="sponsor-slot">[Logo partenaire]</div>
+      <div class="sponsor-slot">[Logo partenaire]</div>
+      <div class="sponsor-slot">[Logo partenaire]</div>
+    </div>
+
+    <div class="tiers reveal">
+      <div class="tier">
+        <div class="tier-name">Argent</div>
+        <div class="tier-amount">500 — 2 000 $</div>
+        <ul>
+          <li>Logo sur le site web</li>
+          <li>Mention sur les réseaux sociaux</li>
+          <li>Photo officielle du bateau</li>
+        </ul>
+      </div>
+      <div class="tier">
+        <div class="tier-name">Or</div>
+        <div class="tier-amount">2 000 — 10 000 $</div>
+        <ul>
+          <li>Tout l'Argent +</li>
+          <li>Logo sur la coque du bateau</li>
+          <li>Visite de l'atelier &amp; démo</li>
+          <li>Présentation aux étudiants</li>
+        </ul>
+      </div>
+      <div class="tier">
+        <div class="tier-name">Platine</div>
+        <div class="tier-amount">10 000 $ +</div>
+        <ul>
+          <li>Tout l'Or +</li>
+          <li>Logo principal sur la voile</li>
+          <li>Accès données R&amp;D</li>
+          <li>Recrutement prioritaire</li>
+          <li>Présence au lac de Garde</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top: 4rem;">
+      <a href="#contact" class="btn primary">Discuter d'un partenariat <span class="btn-arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer id="contact">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>MARLIN.</h3>
+      <p>Équipe étudiante en génie de l'Université de Sherbrooke. SuMoTh International Challenge — Lac de Garde, Italie.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Naviguer</h4>
+      <a href="#defi">Le défi</a>
+      <a href="#bateau">Le bateau</a>
+      <a href="#phases">Notre R&amp;D</a>
+      <a href="#equipe">Équipe</a>
+      <a href="#sponsors">Sponsors</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:marlin@usherbrooke.ca">marlin@usherbrooke.ca</a>
+      <a href="#">Instagram</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">GitHub</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 MARLIN · Université de Sherbrooke</div>
+    <div>Faculté de génie · Sherbrooke, QC</div>
+  </div>
+</footer>
+
+<script>
+// ============ NAV SCROLL ============
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ============ REVEAL ON SCROLL ============
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15 });
+reveals.forEach(el => io.observe(el));
+
+// ============ HERO PARTICLES (sonar / data points) ============
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let w, h;
+
+function resize() {
+  w = canvas.width = canvas.offsetWidth;
+  h = canvas.height = canvas.offsetHeight;
+  // Reseed on resize for proper distribution
+  particles = [];
+  const count = Math.floor((w * h) / 18000);
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.2,
+      vy: (Math.random() - 0.5) * 0.15 - 0.05,
+      r: Math.random() * 1.5 + 0.3,
+      a: Math.random() * 0.6 + 0.1
+    });
+  }
+}
+resize();
+window.addEventListener('resize', resize);
+
+function draw() {
+  ctx.clearRect(0, 0, w, h);
+
+  // Lines between near particles
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    for (let j = i + 1; j < particles.length; j++) {
+      const q = particles[j];
+      const dx = p.x - q.x;
+      const dy = p.y - q.y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < 130) {
+        ctx.strokeStyle = `rgba(0, 225, 255, ${(1 - d / 130) * 0.15})`;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(q.x, q.y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Particles
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 0) p.x = w;
+    if (p.x > w) p.x = 0;
+    if (p.y < 0) p.y = h;
+    if (p.y > h) p.y = 0;
+    ctx.fillStyle = `rgba(0, 225, 255, ${p.a})`;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+</body>
+</html>
