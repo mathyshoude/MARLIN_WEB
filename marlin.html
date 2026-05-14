@@ -144,9 +144,10 @@ nav.scrolled {
 }
 
 .hero-content {
-  position: relative; z-index: 3;
-  max-width: 1100px; width: 100%;
-  margin: 0 auto;
+  position: absolute;
+  left: 9vw;
+  top: 48%;
+  transform: translateY(-50%);
 }
 
 .hero-tag {
@@ -240,7 +241,7 @@ nav.scrolled {
 .hero-meta .item span { color: var(--signal); display: block; margin-top: 0.3rem; font-size: 0.8rem; }
 
 .scroll-cue {
-  position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+  position: absolute; bottom: 9rem; left: 50%; transform: translateX(-50%);
   width: 22px; height: 36px;
   border: 1px solid var(--foam-dim);
   border-radius: 11px; z-index: 3;
