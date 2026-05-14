@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"C:\\\\Users\\\\mathy\\\\Documents\\\\MARLIN_CFD\\\\MARLIN_WEB\\\\.claude\")"
+    ]
+  }
+}
