@@ -129,7 +129,7 @@ nav.scrolled {
 .hero {
   position: relative; min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
-  padding: 0 3rem;
+  padding: 0 12vw 0 2vw;
   overflow: hidden; z-index: 2;
 }
 .hero::before {
@@ -190,8 +190,8 @@ nav.scrolled {
   width: 100%; max-width: 1400px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: start;
   gap: 3rem;
 }
 
@@ -251,8 +251,8 @@ nav.scrolled {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 1.2rem;
-  padding-top: 4.5rem;
+  gap: 1rem;
+  padding-top: calc(2rem + 65px);
 }
 .hero-logo {
   width: clamp(220px, 22vw, 380px);
@@ -1114,7 +1114,6 @@ footer {
     </div>
     <!-- RIGHT: countdown -->
     <div class="hero-right">
-      <div class="countdown-title">Compte à rebours — SuMoTh 2027</div>
       <div class="countdown" id="countdown">
         <div class="countdown-item"><div class="countdown-val" id="cd-days">---</div><div class="countdown-label">Jours</div></div>
         <div class="countdown-sep">:</div>
@@ -1124,6 +1123,7 @@ footer {
         <div class="countdown-sep">:</div>
         <div class="countdown-item"><div class="countdown-val" id="cd-secs">--</div><div class="countdown-label">Secondes</div></div>
       </div>
+      <div class="countdown-title">SuMoTh International Challenge — 2027</div>
     </div>
   </div>
 
