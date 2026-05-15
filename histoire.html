@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notre Histoire — MARLIN | Université de Sherbrooke</title>
+<meta name="description" content="L'histoire du projet MARLIN — de l'idée au Moth à foils instinctif. Découvrez notre parcours depuis la fondation de l'équipe.">
+<meta name="theme-color" content="#03101a">
+<link rel="icon" type="image/png" href="media/LogoMarlin.png">
+<link rel="apple-touch-icon" href="media/LogoMarlin.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --abyss: #03101a;
+  --deep: #061b2e;
+  --ocean: #0a3b5c;
+  --surface: #1a6e9c;
+  --signal: #00e1ff;
+  --signal-dim: #4aa3c4;
+  --foam: #e8f4f8;
+  --foam-dim: #94adb8;
+  --rust: #ff6b35;
+  --gold: #ffd700;
+  --silver: #c0c0c0;
+  --platine: #e5e4e2;
+  --grid: rgba(0, 225, 255, 0.06);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--abyss);
+  color: var(--foam);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 300;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+.label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--signal);
+}
+
+/* ============ NAV ============ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 1.2rem 3.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(3,16,26,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,225,255,0.08);
+  transition: all 0.4s ease;
+}
+.logo {
+  display: inline-flex; align-items: center;
+  text-decoration: none; transition: opacity 0.3s;
+}
+.logo img { height: 50px; width: auto; display: block; }
+.logo:hover { opacity: 0.8; }
+.nav-links {
+  display: flex; gap: 2.5rem; align-items: center; list-style: none;
+}
+.nav-links a {
+  color: var(--foam); text-decoration: none;
+  font-size: 0.85rem; font-weight: 400;
+  letter-spacing: 0.05em; transition: color 0.2s;
+  position: relative; padding-bottom: 4px;
+}
+.nav-links a:hover { color: var(--signal); }
+.nav-links a::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 0; height: 1px; background: var(--signal);
+  transition: width 0.3s ease;
+}
+.nav-links a:hover::after { width: 100%; }
+.nav-links a.active { color: var(--signal); }
+.nav-links a.active::after { width: 100%; }
+.nav-right { display: flex; align-items: center; gap: 1.5rem; }
+.nav-udes {
+  height: 42px; filter: invert(1) brightness(0.85);
+  opacity: 0.7; transition: opacity 0.3s;
+}
+.nav-udes:hover { opacity: 1; }
+.lang {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+  color: var(--foam-dim); border: 1px solid var(--foam-dim);
+  padding: 0.3rem 0.6rem; cursor: pointer;
+  transition: all 0.2s; background: transparent;
+}
+.lang:hover { border-color: var(--signal); color: var(--signal); }
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; background: none; border: none; padding: 6px; z-index: 101;
+}
+.hamburger span {
+  width: 22px; height: 2px; background: var(--foam); transition: all 0.3s;
+}
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+.nav-mobile-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(3,16,26,0.97); backdrop-filter: blur(20px);
+  z-index: 99; flex-direction: column; align-items: center;
+  justify-content: center; gap: 2rem;
+}
+.nav-mobile-overlay.open { display: flex; }
+.nav-mobile-overlay a {
+  color: var(--foam); text-decoration: none;
+  font-family: 'Archivo', sans-serif; font-weight: 700;
+  font-size: 1.5rem; letter-spacing: 0.05em; transition: color 0.2s;
+}
+.nav-mobile-overlay a:hover { color: var(--signal); }
+
+/* ============ GRID ============ */
+.grid-bg {
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none; z-index: 1;
+}
+
+/* ============ COMMON ============ */
+section { position: relative; padding: 8rem 3rem; z-index: 2; }
+.container { max-width: 1200px; margin: 0 auto; }
+.section-head { margin-bottom: 5rem; }
+.section-head .label { display: block; margin-bottom: 1rem; }
+.section-head h2 {
+  font-family: 'Archivo', sans-serif; font-weight: 900;
+  font-size: clamp(2.2rem, 4.5vw, 4rem);
+  letter-spacing: -0.03em; line-height: 1; max-width: 900px;
+}
+.section-head h2 .accent { color: var(--signal); }
+.section-head p {
+  margin-top: 1.5rem; font-size: 1.1rem;
+  color: var(--foam-dim); max-width: 650px; line-height: 1.7;
+}
+.reveal {
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-d1 { transition-delay: 0.15s; }
+.reveal-d2 { transition-delay: 0.3s; }
+.reveal-d3 { transition-delay: 0.45s; }
+.reveal-d4 { transition-delay: 0.6s; }
+.btn {
+  display: inline-flex; align-items: center; gap: 0.7rem;
+  padding: 0.9rem 1.8rem;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.15em;
+  text-decoration: none; border: 1px solid var(--foam);
+  color: var(--foam); background: transparent;
+  cursor: pointer; transition: all 0.3s;
+  position: relative; overflow: hidden;
+}
+.btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--signal); transform: translateX(-100%);
+  transition: transform 0.3s ease; z-index: -1;
+}
+.btn:hover { color: var(--abyss); border-color: var(--signal); }
+.btn:hover::before { transform: translateX(0); }
+.btn.primary { border-color: var(--signal); color: var(--signal); }
+.btn.primary:hover { color: var(--abyss); }
+.btn-arrow { transition: transform 0.3s; }
+.btn:hover .btn-arrow { transform: translateX(4px); }
+
+/* ============ PAGE HERO ============ */
+.page-hero {
+  position: relative; min-height: 50vh;
+  display: flex; align-items: center;
+  padding: 10rem 3rem 5rem;
+  overflow: hidden; z-index: 2;
+}
+.page-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 100%, var(--ocean) 0%, transparent 70%),
+    linear-gradient(to bottom, var(--abyss) 0%, var(--deep) 60%, var(--ocean) 100%);
+  z-index: 0;
+}
+.page-hero .container { position: relative; z-index: 2; }
+.page-hero .breadcrumb {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+  text-transform: uppercase; letter-spacing: 0.2em;
+  color: var(--foam-dim); margin-bottom: 2rem;
+}
+.page-hero .breadcrumb a {
+  color: var(--signal); text-decoration: none; transition: opacity 0.2s;
+}
+.page-hero .breadcrumb a:hover { opacity: 0.7; }
+.page-hero h1 {
+  font-family: 'Archivo', sans-serif; font-weight: 900;
+  font-size: clamp(3rem, 7vw, 6rem);
+  line-height: 0.95; letter-spacing: -0.04em;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--foam) 0%, var(--signal) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.page-hero p {
+  font-size: 1.15rem; color: var(--foam-dim);
+  max-width: 600px; line-height: 1.7;
+}
+
+/* ============ HISTOIRE TIMELINE ============ */
+.histoire-section {
+  background: linear-gradient(to bottom, var(--deep) 0%, var(--abyss) 100%);
+  position: relative; overflow: hidden;
+}
+.histoire-timeline {
+  position: relative; padding-left: 4rem;
+}
+.histoire-timeline::before {
+  content: ''; position: absolute;
+  top: 0; bottom: 0; left: 1.5rem;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--signal) 0%, var(--rust) 50%, rgba(0,225,255,0.1) 100%);
+}
+
+.histoire-chapter {
+  position: relative; margin-bottom: 6rem;
+}
+.histoire-chapter::before {
+  content: ''; position: absolute;
+  left: -4rem; top: 0.8rem;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--abyss); border: 3px solid var(--signal);
+  transform: translateX(calc(1.5rem - 9px));
+  z-index: 2; transition: all 0.4s;
+}
+.histoire-chapter:hover::before {
+  background: var(--signal);
+  box-shadow: 0 0 20px rgba(0,225,255,0.5);
+}
+
+.histoire-year {
+  font-family: 'Archivo', sans-serif; font-weight: 900;
+  font-size: 3rem; line-height: 1; color: var(--foam);
+  margin-bottom: 0.5rem;
+}
+.histoire-period {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+  text-transform: uppercase; letter-spacing: 0.2em;
+  color: var(--signal); margin-bottom: 1.5rem;
+}
+.histoire-content {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;
+}
+.histoire-text h3 {
+  font-family: 'Archivo', sans-serif; font-weight: 700;
+  font-size: 1.6rem; margin-bottom: 1rem;
+}
+.histoire-text h3 .accent { color: var(--signal); }
+.histoire-text p {
+  color: var(--foam-dim); font-size: 1rem;
+  line-height: 1.7; margin-bottom: 1rem;
+}
+.histoire-highlights {
+  display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.5rem;
+}
+.histoire-highlights span {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 0.3rem 0.7rem; color: var(--signal);
+  border: 1px solid rgba(0,225,255,0.2);
+  background: rgba(0,225,255,0.05);
+}
+.histoire-image {
+  position: relative; aspect-ratio: 16/10; overflow: hidden;
+  border: 1px solid rgba(0,225,255,0.1);
+  background: rgba(10,59,92,0.2);
+}
+.histoire-image img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.5s;
+}
+.histoire-image:hover img { transform: scale(1.05); }
+.histoire-image .placeholder {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 100%;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.15em;
+  color: var(--foam-dim); opacity: 0.5;
+}
+
+/* ============ GALERIE ============ */
+.galerie-section {
+  background: var(--abyss); position: relative; overflow: hidden;
+}
+.galerie-section::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(0,225,255,0.04) 0%, transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(255,107,53,0.03) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+.galerie-tabs {
+  display: flex; gap: 1rem; margin-bottom: 3rem;
+}
+.galerie-tab {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.15em;
+  padding: 0.6rem 1.2rem; cursor: pointer;
+  background: transparent; color: var(--foam-dim);
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.3s;
+}
+.galerie-tab:hover { border-color: var(--signal); color: var(--signal); }
+.galerie-tab.active {
+  background: rgba(0,225,255,0.1); color: var(--signal);
+  border-color: var(--signal);
+}
+
+.galerie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.galerie-item {
+  position: relative; aspect-ratio: 16/10; overflow: hidden;
+  border: 1px solid rgba(0,225,255,0.08);
+  background: rgba(10,59,92,0.15);
+  cursor: pointer; transition: all 0.4s;
+}
+.galerie-item:hover { border-color: rgba(0,225,255,0.3); transform: translateY(-4px); }
+.galerie-item img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.5s;
+}
+.galerie-item:hover img { transform: scale(1.08); }
+.galerie-item .placeholder {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 100%;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+  text-transform: uppercase; letter-spacing: 0.15em;
+  color: var(--foam-dim); opacity: 0.4;
+}
+.galerie-item-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(3,16,26,0.8) 0%, transparent 50%);
+  display: flex; align-items: flex-end; padding: 1.2rem;
+  opacity: 0; transition: opacity 0.4s;
+}
+.galerie-item:hover .galerie-item-overlay { opacity: 1; }
+.galerie-item-caption {
+  font-size: 0.85rem; color: var(--foam); font-weight: 500;
+}
+.galerie-item-date {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+  color: var(--signal-dim); text-transform: uppercase;
+  letter-spacing: 0.1em; margin-top: 0.3rem;
+}
+
+/* Video items */
+.galerie-item.video::after {
+  content: ''; position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 60px; height: 60px; border-radius: 50%;
+  background: rgba(0,225,255,0.2);
+  border: 2px solid var(--signal);
+  z-index: 2; pointer-events: none;
+  transition: all 0.3s;
+}
+.galerie-item.video:hover::after {
+  background: rgba(0,225,255,0.4);
+  box-shadow: 0 0 30px rgba(0,225,255,0.3);
+}
+.galerie-item.video .play-icon {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-40%, -50%);
+  width: 0; height: 0;
+  border-left: 18px solid var(--signal);
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+  z-index: 3; pointer-events: none;
+}
+
+/* Lightbox */
+.lightbox {
+  display: none; position: fixed; inset: 0;
+  background: rgba(3,16,26,0.95); backdrop-filter: blur(20px);
+  z-index: 200; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.lightbox.open { display: flex; }
+.lightbox img, .lightbox video {
+  max-width: 90vw; max-height: 85vh; object-fit: contain;
+  border: 1px solid rgba(0,225,255,0.15);
+}
+.lightbox-close {
+  position: absolute; top: 2rem; right: 2rem;
+  font-family: 'Archivo', sans-serif; font-size: 2rem;
+  color: var(--foam); cursor: pointer;
+  background: none; border: none;
+  transition: color 0.2s;
+}
+.lightbox-close:hover { color: var(--signal); }
+
+/* ============ FOOTER ============ */
+footer {
+  background: var(--abyss); padding: 5rem 3rem 2rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  position: relative; z-index: 2;
+}
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr;
+  gap: 4rem; margin-bottom: 4rem;
+  max-width: 1200px; margin-left: auto; margin-right: auto;
+}
+.footer-brand { display: flex; align-items: center; gap: 1.5rem; }
+.footer-logo { width: 80px; filter: drop-shadow(0 0 10px rgba(0,225,255,0.2)); }
+.footer-brand-text h3 {
+  font-family: 'Archivo', sans-serif; font-weight: 900;
+  font-size: 2rem; letter-spacing: -0.02em; margin-bottom: 0.5rem;
+}
+.footer-brand-text p { color: var(--foam-dim); font-size: 0.9rem; }
+.footer-col h4 {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.2em;
+  color: var(--signal); margin-bottom: 1.5rem;
+}
+.footer-col a {
+  display: block; color: var(--foam-dim); text-decoration: none;
+  font-size: 0.9rem; padding: 0.4rem 0; transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--signal); }
+.footer-bottom {
+  max-width: 1200px; margin: 0 auto; padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+  color: var(--foam-dim); letter-spacing: 0.1em;
+}
+.footer-udes { height: 22px; filter: invert(1) brightness(0.7); opacity: 0.5; }
+
+/* ============ MOBILE ============ */
+@media (max-width: 820px) {
+  nav { padding: 0.8rem 1.5rem; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  section { padding: 5rem 1.5rem; }
+  .page-hero { padding: 8rem 1.5rem 3rem; min-height: 40vh; }
+  .histoire-content { grid-template-columns: 1fr; gap: 2rem; }
+  .histoire-timeline { padding-left: 2.5rem; }
+  .histoire-timeline::before { left: 0.8rem; }
+  .histoire-chapter::before { left: -2.5rem; transform: translateX(calc(0.8rem - 9px)); }
+  .galerie-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .galerie-tabs { flex-wrap: wrap; }
+  .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .footer-bottom { flex-direction: column; gap: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- ============ NAV ============ -->
+<nav>
+  <a href="marlin.html" class="logo"><img src="media/LogoMarlin.png" alt="MARLIN logo"></a>
+  <ul class="nav-links">
+    <li><a href="marlin.html#defi">Le défi</a></li>
+    <li><a href="marlin.html#bateau">Technologie</a></li>
+    <li><a href="marlin.html#neural">R&D / IA</a></li>
+    <li><a href="histoire.html" class="active">Notre histoire</a></li>
+    <li><a href="journal.html">Journal</a></li>
+    <li><a href="marlin.html#equipe">Équipe</a></li>
+    <li><a href="marlin.html#recrutement">Rejoindre</a></li>
+    <li><a href="marlin.html#sponsors">Sponsors</a></li>
+  </ul>
+  <div class="nav-right">
+    <img src="media/UdeS_logo_h_noirHR.png" alt="Université de Sherbrooke" class="nav-udes">
+    <button class="lang" id="lang-toggle">FR / EN</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="nav-mobile-overlay" id="mobile-nav">
+  <a href="marlin.html#defi" class="mobile-link">Le défi</a>
+  <a href="marlin.html#bateau" class="mobile-link">Technologie</a>
+  <a href="marlin.html#neural" class="mobile-link">R&D / IA</a>
+  <a href="histoire.html" class="mobile-link">Notre histoire</a>
+  <a href="journal.html" class="mobile-link">Journal</a>
+  <a href="marlin.html#equipe" class="mobile-link">Équipe</a>
+  <a href="marlin.html#recrutement" class="mobile-link">Rejoindre</a>
+  <a href="marlin.html#sponsors" class="mobile-link">Sponsors</a>
+</div>
+
+<!-- ============ PAGE HERO ============ -->
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="marlin.html">Accueil</a> / Notre histoire
+    </div>
+    <h1>Notre<br>histoire.</h1>
+    <p>De l'idée ambitieuse au Moth à foils le plus intelligent jamais conçu par des étudiants. Retour sur le parcours de MARLIN depuis ses débuts.</p>
+  </div>
+</section>
+
+<!-- ============ TIMELINE ============ -->
+<section class="histoire-section">
+  <div class="container">
+    <div class="histoire-timeline">
+
+      <!-- Chapitre 1 -->
+      <div class="histoire-chapter reveal">
+        <span class="histoire-year">2025</span>
+        <span class="histoire-period">Automne 2025 — Fondation</span>
+        <div class="histoire-content">
+          <div class="histoire-text">
+            <h3>La <span class="accent">naissance</span> de MARLIN</h3>
+            <p>Tout commence par une vision : concevoir un Moth à foils piloté par intelligence artificielle, entièrement par des étudiants de l'Université de Sherbrooke. L'équipe fondatrice se forme autour de passionnés de voile, d'IA et de génie mécanique.</p>
+            <p>Les premières semaines sont consacrées à la recherche bibliographique, l'étude des règlements SuMoTh et la structuration de l'équipe en sous-groupes techniques.</p>
+            <div class="histoire-highlights">
+              <span>Fondation</span><span>Recherche</span><span>Recrutement</span>
+            </div>
+          </div>
+          <div class="histoire-image">
+            <!-- Remplacer par votre image -->
+            <div class="placeholder">Photo fondation équipe</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapitre 2 -->
+      <div class="histoire-chapter reveal">
+        <span class="histoire-year">2026</span>
+        <span class="histoire-period">Hiver 2026 — R&D et conception</span>
+        <div class="histoire-content">
+          <div class="histoire-text">
+            <h3>Les <span class="accent">simulations</span> prennent forme</h3>
+            <p>La campagne CFD massive débute : plus de 12 000 simulations OpenFOAM pour optimiser les profils de foils. En parallèle, l'équipe IA entraîne les premiers réseaux de neurones pour prédire les forces hydrodynamiques en temps réel.</p>
+            <p>L'équipe électronique conçoit le premier PCB embarqué intégrant ESP32 et Compute Module 5 pour le traitement de données à bord.</p>
+            <div class="histoire-highlights">
+              <span>CFD</span><span>OpenFOAM</span><span>PyTorch</span><span>PCB v1.0</span>
+            </div>
+          </div>
+          <div class="histoire-image">
+            <div class="placeholder">Photo simulations / PCB</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapitre 3 -->
+      <div class="histoire-chapter reveal">
+        <span class="histoire-year">2026</span>
+        <span class="histoire-period">Été 2026 — Prototypage</span>
+        <div class="histoire-content">
+          <div class="histoire-text">
+            <h3>Du <span class="accent">numérique</span> au physique</h3>
+            <p>Les résultats de simulation sont validés en bassin d'essai. La fabrication du premier prototype de coque en matériaux composites débute. Les foils optimisés sont usinés et assemblés.</p>
+            <p>Le système de contrôle embarqué est testé sur banc d'essai : capteurs IMU, jauges de contrainte et communication temps réel entre les modules.</p>
+            <div class="histoire-highlights">
+              <span>Composites</span><span>Bassin d'essai</span><span>Électronique</span><span>Tests</span>
+            </div>
+          </div>
+          <div class="histoire-image">
+            <div class="placeholder">Photo prototypage</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapitre 4 -->
+      <div class="histoire-chapter reveal">
+        <span class="histoire-year">2027</span>
+        <span class="histoire-period">Hiver — Été 2027 — Intégration et compétition</span>
+        <div class="histoire-content">
+          <div class="histoire-text">
+            <h3>Cap sur le <span class="accent">Lac de Garde</span></h3>
+            <p>L'intégration finale réunit tous les sous-systèmes : coque, foils, électronique embarquée et IA de contrôle. Les essais en eau libre permettent de calibrer le système de vol autonome.</p>
+            <p>Juillet 2027 — L'équipe MARLIN se rend au Lac de Garde en Italie pour le SuMoTh International Challenge, prête à démontrer que l'intelligence artificielle peut révolutionner la voile.</p>
+            <div class="histoire-highlights">
+              <span>Intégration</span><span>Essais en mer</span><span>SuMoTh 2027</span><span>Lac de Garde</span>
+            </div>
+          </div>
+          <div class="histoire-image">
+            <div class="placeholder">Photo compétition / Lac de Garde</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALERIE ============ -->
+<section class="galerie-section" id="galerie">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="label">Galerie</span>
+      <h2>En <span class="accent">images.</span></h2>
+      <p>Les moments forts du projet MARLIN — de la conception à la réalisation.</p>
+    </div>
+
+    <div class="galerie-tabs reveal">
+      <button class="galerie-tab active" data-filter="all">Tout</button>
+      <button class="galerie-tab" data-filter="photo">Photos</button>
+      <button class="galerie-tab" data-filter="video">Vidéos</button>
+    </div>
+
+    <div class="galerie-grid">
+      <!-- Photo items — remplacer les placeholders par vos images -->
+      <div class="galerie-item reveal" data-type="photo">
+        <div class="placeholder">Photo 1</div>
+        <div class="galerie-item-overlay">
+          <div>
+            <div class="galerie-item-caption">Réunion de fondation</div>
+            <div class="galerie-item-date">Septembre 2025</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="galerie-item reveal reveal-d1" data-type="photo">
+        <div class="placeholder">Photo 2</div>
+        <div class="galerie-item-overlay">
+          <div>
+            <div class="galerie-item-caption">Simulations CFD</div>
+            <div class="galerie-item-date">Janvier 2026</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="galerie-item reveal reveal-d2" data-type="photo">
+        <div class="placeholder">Photo 3</div>
+        <div class="galerie-item-overlay">
+          <div>
+            <div class="galerie-item-caption">Assemblage PCB v1.0</div>
+            <div class="galerie-item-date">Mars 2026</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="galerie-item video reveal reveal-d3" data-type="video">
+        <div class="placeholder">Vidéo 1</div>
+        <div class="play-icon"></div>
+        <div class="galerie-item-overlay">
+          <div>
+            <div class="galerie-item-caption">Animation du bateau</div>
+            <div class="galerie-item-date">Avril 2026</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="galerie-item reveal" data-type="photo">
+        <div class="placeholder">Photo 4</div>
+        <div class="galerie-item-overlay">
+          <div>
+            <div class="galerie-item-caption">Tests en bassin</div>
+            <div class="galerie-item-date">Mai 2026</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="galerie-item video reveal reveal-d1" data-type="video">
+        <div class="placeholder">Vidéo 2</div>
+        <div class="play-icon"></div>
+        <div class="galerie-item-overlay">
+          <div>
+            <div class="galerie-item-caption">Premier vol en foil</div>
+            <div class="galerie-item-date">Été 2026</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="galerie-item reveal reveal-d2" data-type="photo">
+        <div class="placeholder">Photo 5</div>
+        <div class="galerie-item-overlay">
+          <div>
+            <div class="galerie-item-caption">L'équipe au complet</div>
+            <div class="galerie-item-date">2026</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="galerie-item reveal reveal-d3" data-type="photo">
+        <div class="placeholder">Photo 6</div>
+        <div class="galerie-item-overlay">
+          <div>
+            <div class="galerie-item-caption">Fabrication composites</div>
+            <div class="galerie-item-date">2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="media/LogoMarlin.png" alt="MARLIN" class="footer-logo">
+      <div class="footer-brand-text">
+        <h3>MARLIN.</h3>
+        <p>Équipe étudiante en génie — Université de Sherbrooke. SuMoTh International Challenge.</p>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Naviguer</h4>
+      <a href="marlin.html">Accueil</a>
+      <a href="histoire.html">Notre histoire</a>
+      <a href="journal.html">Journal de bord</a>
+      <a href="marlin.html#equipe">Équipe</a>
+      <a href="marlin.html#recrutement">Rejoindre</a>
+      <a href="marlin.html#sponsors">Sponsors</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:marlin@usherbrooke.ca">marlin@usherbrooke.ca</a>
+      <a href="https://instagram.com/VOTRE_COMPTE_INSTA" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://linkedin.com/company/VOTRE_PAGE_LINKEDIN" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/VOTRE_COMPTE_GITHUB" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>&copy; 2026 MARLIN &middot; Université de Sherbrooke</div>
+    <img src="media/UdeS_logo_h_noirHR.png" alt="UdeS" class="footer-udes">
+    <div>Faculté de génie &middot; Sherbrooke, QC</div>
+  </div>
+</footer>
+
+<script>
+// ============ REVEAL ============
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.1 });
+reveals.forEach(el => io.observe(el));
+
+// ============ HAMBURGER ============
+const hamburger = document.getElementById('hamburger');
+const mobileNav = document.getElementById('mobile-nav');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobileNav.classList.toggle('open');
+  document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+});
+document.querySelectorAll('.mobile-link').forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    mobileNav.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+});
+
+// ============ GALERIE TABS ============
+const tabs = document.querySelectorAll('.galerie-tab');
+const items = document.querySelectorAll('.galerie-item');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const filter = tab.dataset.filter;
+    items.forEach(item => {
+      if (filter === 'all' || item.dataset.type === filter) {
+        item.style.display = '';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>
