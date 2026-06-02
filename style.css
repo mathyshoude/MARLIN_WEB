@@ -1249,6 +1249,66 @@ section { position: relative; padding: 8rem 3rem; z-index: 2; }
 .contact-form textarea { resize: vertical; min-height: 120px; }
 .contact-form .btn { margin-top: 1.8rem; width: 100%; justify-content: center; }
 
+/* ============ PARTENAIRES RÉELS ============ */
+.partners-real {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem; margin-top: 1rem; text-align: left;
+}
+.partner-item {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1.3rem 1.4rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(10,59,92,0.15);
+  text-decoration: none; color: var(--foam);
+  transition: all 0.3s; position: relative; overflow: hidden;
+}
+.partner-item::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--signal);
+  transform: scaleY(0); transform-origin: top; transition: transform 0.35s ease;
+}
+.partner-item:hover { border-color: rgba(0,225,255,0.3); transform: translateY(-4px); }
+.partner-item:hover::before { transform: scaleY(1); }
+.partner-item .p-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  background: var(--signal); box-shadow: 0 0 10px rgba(0,225,255,0.6);
+}
+.partner-item .p-name { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 1.02rem; }
+.partner-item .p-tag {
+  display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.58rem;
+  text-transform: uppercase; letter-spacing: 0.12em; color: var(--signal-dim); margin-top: 0.2rem;
+}
+
+/* ============ PÔLES D'ÉQUIPE (anonyme) ============ */
+.poles-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem; margin-top: 1rem;
+}
+.pole-card {
+  border: 1px solid rgba(0,225,255,0.12);
+  background: rgba(10,59,92,0.15);
+  padding: 2.2rem 2rem; position: relative; overflow: hidden;
+  transition: all 0.4s;
+}
+.pole-card::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 0; height: 2px; background: var(--signal);
+  transition: width 0.4s ease;
+}
+.pole-card:hover { border-color: rgba(0,225,255,0.35); transform: translateY(-4px); }
+.pole-card:hover::before { width: 100%; }
+.pole-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.pole-card h3 { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 1.25rem; }
+.pole-card .pole-count { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--signal); white-space: nowrap; }
+.pole-card > p { color: var(--foam-dim); font-size: 0.92rem; line-height: 1.6; margin-bottom: 1.2rem; }
+.pole-roles { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.pole-roles span {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 0.3rem 0.7rem; color: var(--foam-dim);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
 /* ============ FOOTER ============ */
 footer {
   background: var(--abyss); padding: 5rem 3rem 2rem;
