@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le projet — MARLIN | Technologie, IA & R&D</title>
+<meta name="description" content="La technologie du Moth MARLIN — hydrodynamique CFD, réseau de neurones embarqué, électronique custom et feuille de route R&D sur trois saisons.">
+<meta name="theme-color" content="#03101a">
+<link rel="icon" type="image/png" href="media/LogoMarlin.png">
+<link rel="apple-touch-icon" href="media/LogoMarlin.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="subpage">
+
+<div class="grid-bg"></div>
+
+<!-- ============ NAV ============ -->
+<nav id="nav">
+  <a href="marlin.html" class="logo"><img src="media/LogoMarlin.png" alt="MARLIN logo"></a>
+  <ul class="nav-links">
+    <li><a href="projet.html" class="active">Le projet</a></li>
+    <li><a href="equipe.html">Équipe</a></li>
+    <li><a href="prix.html">Prix</a></li>
+    <li><a href="partenaires.html">Partenaires</a></li>
+    <li><a href="histoire.html">Histoire</a></li>
+    <li><a href="journal.html">Journal</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <img src="media/UdeS_logo_h_noirHR.png" alt="Université de Sherbrooke" class="nav-udes">
+    <button class="lang" id="lang-toggle">FR / EN</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav overlay -->
+<div class="nav-mobile-overlay" id="mobile-nav">
+  <a href="marlin.html" class="mobile-link">Accueil</a>
+  <a href="projet.html" class="mobile-link">Le projet</a>
+  <a href="equipe.html" class="mobile-link">Équipe</a>
+  <a href="prix.html" class="mobile-link">Prix</a>
+  <a href="partenaires.html" class="mobile-link">Partenaires</a>
+  <a href="histoire.html" class="mobile-link">Histoire</a>
+  <a href="journal.html" class="mobile-link">Journal</a>
+  <a href="contact.html" class="mobile-link">Contact</a>
+</div>
+
+<!-- ============ PAGE HERO ============ -->
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="marlin.html">Accueil</a> / Le projet
+    </div>
+    <h1>Le projet.</h1>
+    <p>Un Moth à foils conçu, instrumenté et piloté par les étudiants — où l'hydrodynamique, l'électronique embarquée et l'intelligence artificielle convergent vers un seul objectif : voler plus intelligemment.</p>
+  </div>
+</section>
+
+<!-- ============ BATEAU (3D STL viewer) ============ -->
+<section class="bateau" id="bateau">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="label">01 — Notre bateau</span>
+      <h2>Un Moth qui apprend de chaque sortie.</h2>
+    </div>
+    <div class="stl-stage reveal">
+      <video class="bateau-video" autoplay muted loop playsinline src="media/ANIMATIONBATEAU.mp4"></video>
+      <div class="stl-overlay">
+        VIDÉO · MarlinMainAnimation<br>
+        <span class="v">FORMAT</span> MP4 · <span class="v">BOUCLE</span> OUI<br>
+        AUTO-PLAY · MUTE
+      </div>
+    </div>
+    <div class="subsystems reveal">
+      <div class="subsys-card"><div class="num">/ 01</div><h3>Hydrodynamique</h3><p>Profils de foils optimisés par CFD (OpenFOAM) et validation au bassin. Ratio portance / traînée maximal sur la plage de vol.</p></div>
+      <div class="subsys-card"><div class="num">/ 02</div><h3>Système embarqué</h3><p>ESP32 pour la lecture capteurs temps réel, CM5 pour le calcul lourd, télémétrie radio vers la station terrestre. Étanchéité IP67.</p></div>
+      <div class="subsys-card"><div class="num">/ 03</div><h3>Intelligence artificielle</h3><p>Réseau de neurones entraîné sur les simulations CFD pour estimer les forces hydrodynamiques en temps réel. 1000× plus rapide.</p></div>
+      <div class="subsys-card"><div class="num">/ 04</div><h3>Acquisition de données</h3><p>Loggers haute fréquence, dashboard temps réel, replay post-course. Chaque sortie alimente le digital twin.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEURAL ============ -->
+<section class="neural" id="neural">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="label">02 — Intelligence artificielle</span>
+      <h2>Un cerveau numérique<br>au cœur du <span class="accent">Moth.</span></h2>
+    </div>
+    <div class="neural-grid reveal">
+      <div class="neural-visual"><canvas id="neural-canvas"></canvas></div>
+      <div class="neural-text">
+        <h3>Réseau de neurones <span class="accent">résiduel</span></h3>
+        <p>Notre NN est entraîné sur des milliers de simulations CFD (OpenFOAM, k-ω SST). Il prédit les forces de portance et traînée en fonction de l'angle d'attaque, la vitesse et l'immersion — en microsecondes au lieu de minutes.</p>
+        <p>En Phase 2, il remplace le solveur pour l'exploration paramétrique : l'équipe teste 100 configurations de foil en une nuit. En Phase 3, il devient le modèle interne d'une boucle de contrôle feedforward.</p>
+        <div class="neural-stats">
+          <div class="neural-stat"><div class="neural-stat-val">1000×</div><div class="neural-stat-label">Plus rapide que CFD</div></div>
+          <div class="neural-stat"><div class="neural-stat-val">100+</div><div class="neural-stat-label">Configs / nuit</div></div>
+          <div class="neural-stat"><div class="neural-stat-val">&lt;1%</div><div class="neural-stat-label">Erreur vs solveur</div></div>
+          <div class="neural-stat"><div class="neural-stat-val">μs</div><div class="neural-stat-label">Temps d'inférence</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PCB ============ -->
+<section class="pcb-section" id="pcb">
+  <div class="container">
+    <div class="pcb-grid reveal">
+      <div class="pcb-text">
+        <span class="label">03 — Électronique embarquée</span>
+        <h3 style="margin-top:1rem;">Le système nerveux<br>du <span class="accent">Marlin.</span></h3>
+        <p>Notre PCB custom centralise l'acquisition de données, le contrôle des actionneurs et la télémétrie. Conçu pour résister aux conditions extrêmes du foiling.</p>
+        <p>L'architecture dual-processeur (ESP32 + CM5) sépare les tâches critiques temps réel des calculs lourds d'inférence IA.</p>
+        <div class="pcb-specs">
+          <div class="pcb-spec"><span class="pcb-spec-name">MCU</span><span class="pcb-spec-val">ESP32-S3 · Capteurs & réflexes rapides</span></div>
+          <div class="pcb-spec"><span class="pcb-spec-name">SBC</span><span class="pcb-spec-val">Raspberry CM5 · Calcul lourd & SSD</span></div>
+          <div class="pcb-spec"><span class="pcb-spec-name">AI</span><span class="pcb-spec-val">AI HAT · Inférence NN embarquée</span></div>
+          <div class="pcb-spec"><span class="pcb-spec-name">COMM</span><span class="pcb-spec-val">LoRa 868 MHz · Télémétrie longue portée</span></div>
+        </div>
+      </div>
+      <div class="pcb-visual">
+        <img src="media/ALTIUM-WHATS-NEW-1200X460-3.jpg" alt="PCB Design">
+        <div class="pcb-scan"></div>
+        <div class="pcb-label-overlay">PCB · Marlin v1.0 · En conception</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PHASES ============ -->
+<section class="phases" id="phases">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="label">04 — Notre approche R&amp;D</span>
+      <h2>Trois saisons,<br>une vision<span class="accent">.</span></h2>
+    </div>
+    <div class="phases-track reveal">
+      <div class="phase">
+        <div class="phase-num"><div class="phase-dot">01</div><div class="phase-year">2025 / 2026</div></div>
+        <h3>Le bateau qui<br><span class="accent">se souvient.</span></h3>
+        <p>Plateforme d'acquisition fiable, télémétrie temps réel, logs haute qualité. Chaque sortie devient une donnée exploitable.</p>
+      </div>
+      <div class="phase">
+        <div class="phase-num"><div class="phase-dot">02</div><div class="phase-year">2026 / 2027</div></div>
+        <h3>Le bateau qui<br><span class="accent">se comprend.</span></h3>
+        <p>Le réseau de neurones entre en scène. Analyse hors-ligne, diagnostic, tableau de bord pilote. 10× plus vite sur les profils de foil.</p>
+      </div>
+      <div class="phase">
+        <div class="phase-num"><div class="phase-dot">03</div><div class="phase-year">2027 +</div></div>
+        <h3>Le bateau qui<br><span class="accent">anticipe.</span></h3>
+        <p>Contrôle actif des actionneurs. L'IA stabilise le vol et corrige avant le pilote. Le Moth ne réagit plus — il anticipe.</p>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:5rem;" class="reveal">
+      <a href="equipe.html" class="btn primary">Rencontrer l'équipe <span class="btn-arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="media/LogoMarlin.png" alt="MARLIN" class="footer-logo">
+      <div class="footer-brand-text">
+        <h3>MARLIN.</h3>
+        <p>Équipe étudiante en génie — Université de Sherbrooke. SuMoTh International Challenge.</p>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Naviguer</h4>
+      <a href="marlin.html">Accueil</a>
+      <a href="projet.html">Le projet</a>
+      <a href="equipe.html">Équipe</a>
+      <a href="prix.html">Prix</a>
+      <a href="partenaires.html">Partenaires</a>
+      <a href="histoire.html">Histoire</a>
+      <a href="journal.html">Journal</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="contact.html">Nous contacter</a>
+      <a href="mailto:marlin@usherbrooke.ca">marlin@usherbrooke.ca</a>
+      <a href="https://instagram.com/VOTRE_COMPTE_INSTA" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://linkedin.com/company/VOTRE_PAGE_LINKEDIN" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 MARLIN · Université de Sherbrooke</div>
+    <img src="media/UdeS_logo_h_noirHR.png" alt="UdeS" class="footer-udes">
+    <div>Faculté de génie · Sherbrooke, QC</div>
+  </div>
+</footer>
+
+<script>
+// ============ REVEAL ============
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.1 });
+reveals.forEach(el => io.observe(el));
+
+// ============ HAMBURGER ============
+const hamburger = document.getElementById('hamburger');
+const mobileNav = document.getElementById('mobile-nav');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobileNav.classList.toggle('open');
+  document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+});
+document.querySelectorAll('.mobile-link').forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    mobileNav.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+});
+
+// ============ LANG TOGGLE ============
+const langBtn = document.getElementById('lang-toggle');
+let isEN = false;
+langBtn.addEventListener('click', () => {
+  isEN = !isEN;
+  langBtn.textContent = isEN ? 'EN / FR' : 'FR / EN';
+  document.documentElement.lang = isEN ? 'en' : 'fr';
+});
+
+// ============ NEURAL NETWORK ============
+const nc = document.getElementById('neural-canvas');
+if (nc) {
+  const nctx = nc.getContext('2d');
+  const layers = [4, 8, 12, 8, 4, 2];
+  let neurons = [], synapses = [], nw, nh;
+
+  function resizeNeural() {
+    nw = nc.width = nc.parentElement.offsetWidth;
+    nh = nc.height = nc.parentElement.offsetHeight;
+    neurons = []; synapses = [];
+    const padX = 60, padY = 50;
+    const layerGap = (nw - padX * 2) / (layers.length - 1);
+    layers.forEach((count, li) => {
+      const x = padX + li * layerGap;
+      const nGap = (nh - padY * 2) / (count + 1);
+      for (let ni = 0; ni < count; ni++) {
+        neurons.push({ x, y: padY + nGap * (ni + 1), layer: li, pulse: Math.random() * Math.PI * 2, r: li === 0 || li === layers.length - 1 ? 5 : 4 });
+      }
+    });
+    for (let i = 0; i < neurons.length; i++)
+      for (let j = 0; j < neurons.length; j++)
+        if (neurons[j].layer === neurons[i].layer + 1)
+          synapses.push({ from: i, to: j, signal: Math.random(), speed: 0.002 + Math.random() * 0.008, active: Math.random() > 0.3 });
+  }
+  resizeNeural();
+  window.addEventListener('resize', resizeNeural);
+
+  let nt = 0;
+  function drawNeural() {
+    nctx.clearRect(0, 0, nw, nh);
+    nt += 0.016;
+    synapses.forEach(s => {
+      if (!s.active) return;
+      const a = neurons[s.from], b = neurons[s.to];
+      s.signal = (s.signal + s.speed) % 1;
+      nctx.strokeStyle = 'rgba(0, 225, 255, 0.08)';
+      nctx.lineWidth = 0.5;
+      nctx.beginPath(); nctx.moveTo(a.x, a.y); nctx.lineTo(b.x, b.y); nctx.stroke();
+      const sx = a.x + (b.x - a.x) * s.signal, sy = a.y + (b.y - a.y) * s.signal;
+      nctx.fillStyle = 'rgba(0, 225, 255, 0.6)';
+      nctx.beginPath(); nctx.arc(sx, sy, 1.5, 0, Math.PI * 2); nctx.fill();
+    });
+    neurons.forEach(n => {
+      const glow = 0.3 + 0.3 * Math.sin(nt * 2 + n.pulse);
+      const isIO = n.layer === 0 || n.layer === layers.length - 1;
+      nctx.shadowBlur = 12;
+      nctx.shadowColor = isIO ? 'rgba(255,107,53,0.4)' : 'rgba(0,225,255,0.3)';
+      nctx.fillStyle = isIO ? `rgba(255,107,53,${glow + 0.3})` : `rgba(0,225,255,${glow + 0.2})`;
+      nctx.beginPath(); nctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); nctx.fill();
+      nctx.shadowBlur = 0;
+    });
+    const padX = 60, layerGap = (nw - padX * 2) / (layers.length - 1);
+    nctx.font = '9px JetBrains Mono'; nctx.textAlign = 'center';
+    ['ENTRÉE','C1','C2','C3','C4','SORTIE'].forEach((l, i) => {
+      nctx.fillStyle = i === 0 || i === 5 ? 'rgba(255,107,53,0.6)' : 'rgba(0,225,255,0.4)';
+      nctx.fillText(l, padX + i * layerGap, nh - 15);
+    });
+    requestAnimationFrame(drawNeural);
+  }
+  drawNeural();
+}
+</script>
+
+</body>
+</html>
