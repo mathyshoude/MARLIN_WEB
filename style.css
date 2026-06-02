@@ -881,9 +881,14 @@ section { position: relative; padding: 8rem 3rem; z-index: 2; }
   display: flex; align-items: center; justify-content: center;
   text-decoration: none;
   background: rgba(6,27,46,0.9);
-  backdrop-filter: blur(8px);
   overflow: hidden;
 }
+/* Flottement continu des cartes (décalé entre elles) */
+.sponsor-card-wrap { animation: slot-float 7s ease-in-out infinite; }
+.sponsor-tier-grid .sponsor-card-wrap:nth-child(2n) { animation-delay: -2.3s; }
+.sponsor-tier-grid .sponsor-card-wrap:nth-child(3n) { animation-delay: -4.6s; }
+/* Emplacement disponible animé dans la vitrine à grades */
+.sponsor-card.is-empty { flex-direction: column; gap: 0.45rem; }
 .sponsor-card::after {
   content: ''; position: absolute; inset: 0;
   background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%);
