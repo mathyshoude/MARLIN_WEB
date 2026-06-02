@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — MARLIN | Université de Sherbrooke</title>
+<meta name="description" content="Contactez l'équipe MARLIN — partenariats, recrutement, presse. Université de Sherbrooke, Faculté de génie.">
+<meta name="theme-color" content="#03101a">
+<link rel="icon" type="image/png" href="media/LogoMarlin.png">
+<link rel="apple-touch-icon" href="media/LogoMarlin.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="subpage">
+
+<div class="grid-bg"></div>
+
+<!-- ============ NAV ============ -->
+<nav id="nav">
+  <a href="marlin.html" class="logo"><img src="media/LogoMarlin.png" alt="MARLIN logo"></a>
+  <ul class="nav-links">
+    <li><a href="projet.html">Le projet</a></li>
+    <li><a href="equipe.html">Équipe</a></li>
+    <li><a href="prix.html">Prix</a></li>
+    <li><a href="partenaires.html">Partenaires</a></li>
+    <li><a href="histoire.html">Histoire</a></li>
+    <li><a href="journal.html">Journal</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <img src="media/UdeS_logo_h_noirHR.png" alt="Université de Sherbrooke" class="nav-udes">
+    <button class="lang" id="lang-toggle">FR / EN</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav overlay -->
+<div class="nav-mobile-overlay" id="mobile-nav">
+  <a href="marlin.html" class="mobile-link">Accueil</a>
+  <a href="projet.html" class="mobile-link">Le projet</a>
+  <a href="equipe.html" class="mobile-link">Équipe</a>
+  <a href="prix.html" class="mobile-link">Prix</a>
+  <a href="partenaires.html" class="mobile-link">Partenaires</a>
+  <a href="histoire.html" class="mobile-link">Histoire</a>
+  <a href="journal.html" class="mobile-link">Journal</a>
+  <a href="contact.html" class="mobile-link">Contact</a>
+</div>
+
+<!-- ============ PAGE HERO ============ -->
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="marlin.html">Accueil</a> / Contact
+    </div>
+    <h1>Contact.</h1>
+    <p>Partenariat, recrutement, presse ou simple curiosité — écris-nous. On répond toujours.</p>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="contact-section">
+  <div class="container">
+    <div class="contact-grid">
+
+      <!-- Colonne infos -->
+      <div class="contact-info reveal">
+        <h2>Parlons de votre <span class="accent">idée.</span></h2>
+        <p>Que vous souhaitiez devenir partenaire, rejoindre l'équipe ou en savoir plus sur le projet, l'équipe MARLIN est à votre écoute.</p>
+
+        <div class="contact-detail">
+          <div class="ico">✉️</div>
+          <div>
+            <div class="ct-label">Courriel</div>
+            <a href="mailto:marlin@usherbrooke.ca">marlin@usherbrooke.ca</a>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="ico">📍</div>
+          <div>
+            <div class="ct-label">Localisation</div>
+            <span class="ct-val">Faculté de génie · Université de Sherbrooke, QC</span>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="ico">🤝</div>
+          <div>
+            <div class="ct-label">Partenariats</div>
+            <a href="partenaires.html">Voir les paliers de commandite</a>
+          </div>
+        </div>
+
+        <div class="contact-socials">
+          <a href="https://instagram.com/VOTRE_COMPTE_INSTA" target="_blank" rel="noopener" class="contact-social">IG</a>
+          <a href="https://linkedin.com/company/VOTRE_PAGE_LINKEDIN" target="_blank" rel="noopener" class="contact-social">IN</a>
+          <a href="https://github.com/VOTRE_COMPTE_GITHUB" target="_blank" rel="noopener" class="contact-social">GH</a>
+        </div>
+      </div>
+
+      <!-- Colonne formulaire -->
+      <div class="contact-form-wrap reveal">
+        <h3>Envoyer un message</h3>
+        <form class="contact-form" id="contact-form">
+          <label for="cf-name">Nom</label>
+          <input type="text" id="cf-name" name="name" placeholder="Votre nom" required>
+
+          <label for="cf-email">Courriel</label>
+          <input type="email" id="cf-email" name="email" placeholder="vous@exemple.com" required>
+
+          <label for="cf-subject">Sujet</label>
+          <input type="text" id="cf-subject" name="subject" placeholder="Partenariat, recrutement…">
+
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" placeholder="Dites-nous tout…" required></textarea>
+
+          <button type="submit" class="btn primary">Envoyer le message <span class="btn-arrow">→</span></button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="media/LogoMarlin.png" alt="MARLIN" class="footer-logo">
+      <div class="footer-brand-text">
+        <h3>MARLIN.</h3>
+        <p>Équipe étudiante en génie — Université de Sherbrooke. SuMoTh International Challenge.</p>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Naviguer</h4>
+      <a href="marlin.html">Accueil</a>
+      <a href="projet.html">Le projet</a>
+      <a href="equipe.html">Équipe</a>
+      <a href="prix.html">Prix</a>
+      <a href="partenaires.html">Partenaires</a>
+      <a href="histoire.html">Histoire</a>
+      <a href="journal.html">Journal</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="contact.html">Nous contacter</a>
+      <a href="mailto:marlin@usherbrooke.ca">marlin@usherbrooke.ca</a>
+      <a href="https://instagram.com/VOTRE_COMPTE_INSTA" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://linkedin.com/company/VOTRE_PAGE_LINKEDIN" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 MARLIN · Université de Sherbrooke</div>
+    <img src="media/UdeS_logo_h_noirHR.png" alt="UdeS" class="footer-udes">
+    <div>Faculté de génie · Sherbrooke, QC</div>
+  </div>
+</footer>
+
+<script>
+// ============ REVEAL ============
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.1 });
+reveals.forEach(el => io.observe(el));
+
+// ============ HAMBURGER ============
+const hamburger = document.getElementById('hamburger');
+const mobileNav = document.getElementById('mobile-nav');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobileNav.classList.toggle('open');
+  document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+});
+document.querySelectorAll('.mobile-link').forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    mobileNav.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+});
+
+// ============ LANG TOGGLE ============
+const langBtn = document.getElementById('lang-toggle');
+let isEN = false;
+langBtn.addEventListener('click', () => {
+  isEN = !isEN;
+  langBtn.textContent = isEN ? 'EN / FR' : 'FR / EN';
+  document.documentElement.lang = isEN ? 'en' : 'fr';
+});
+
+// ============ FORMULAIRE → mailto (statique, sans backend) ============
+const cform = document.getElementById('contact-form');
+if (cform) {
+  cform.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('cf-name').value;
+    const email = document.getElementById('cf-email').value;
+    const subject = document.getElementById('cf-subject').value || 'Message depuis le site MARLIN';
+    const message = document.getElementById('cf-message').value;
+    const body = `${message}\n\n— ${name} (${email})`;
+    window.location.href = `mailto:marlin@usherbrooke.ca?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  });
+}
+</script>
+
+</body>
+</html>
