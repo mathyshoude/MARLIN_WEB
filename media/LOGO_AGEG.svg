@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" width="408.50027" height="410.79837" version="1.1" id="svg2">
+  <metadata id="metadata4510">image/svg+xml</metadata>
+  <defs id="defs1">
+    <clipPath id="clipPath4520">
+      <path id="path4518" d="m 2.60051,406.70274 h 352.657 V 80.61574 H 2.60051 Z"></path>
+    </clipPath>
+  </defs>
+  <g id="g2" transform="translate(-16.827347,-16.753977)">
+    <title id="title2">Layer 1</title>
+    <g transform="matrix(1.3333333,0,0,-1.3333333,0,549.99999)" id="g4514" style="fill:#000000;fill-opacity:1">
+      <g clip-path="url(#clipPath4520)" id="g4516" style="fill:#000000;fill-opacity:1">
+        <g id="g4522" style="fill:#000000;fill-opacity:1">
+          <path fill="#088136" fill-rule="nonzero" id="path4524" d="m 94.27141,399.93452 c 0,0 -121.822,-292.124 222.627,-195.193 0,0 -291.845,-62.689 -222.627,195.193" style="fill:#000000;fill-opacity:1"></path>
+        </g>
+        <g id="g4526" style="fill:#000000;fill-opacity:1">
+          <path fill="#ffcb04" fill-rule="nonzero" id="path4528" d="m 12.62051,385.44975 c 0,0 330.112,-98.492 7.673,-293.614 0,0 256.903,177.957 -7.673,293.614" style="fill:#000000;fill-opacity:1"></path>
+        </g>
+      </g>
+    </g>
+    <text font-style="italic" font-weight="bold" font-size="57.4411px" font-family="Arial" fill="#088136" fill-rule="nonzero" y="-217.70464" x="166.62491" id="text4532" transform="matrix(1.3333333,0,0,1.3333333,0,549.99999)" style="fill:#000000;fill-opacity:1">
+      <tspan id="tspan4530" y="-217.70464" x="166.62491 202.35327 241.29834 273.86743" style="fill:#000000;fill-opacity:1">AGEG</tspan>
+    </text>
+    <text font-weight="bold" font-size="36.3844px" font-family="Arial" fill="#088136" fill-rule="nonzero" stroke-width="0.9867" y="-152.25328" x="137.39282" id="text4536" transform="matrix(1.3512991,0,0,1.3156063,0,549.99999)" style="fill:#000000;fill-opacity:1">
+      <tspan stroke-width="0.9867" id="tspan4534" y="-152.25328" x="137.39282 148.05345 170.83011 193.60678 214.38229 237.15895 247.8196 268.59512 283.29443 293.95508" style="fill:#000000;fill-opacity:1">Ingénierie</tspan>
+    </text>
+    <text font-weight="normal" font-size="35.9007px" font-family="Arial" fill="#088136" fill-rule="nonzero" y="-115.26224" x="122.5839" id="text4540" transform="matrix(1.3333333,0,0,1.3333333,0,549.99999)" style="fill:#000000;fill-opacity:1">
+      <tspan id="tspan4538" y="-115.26224" x="122.5839 147.60669 168.6445 189.68233 202.71428 223.75208 236.78404 257.82184 278.85965 297.88702" style="fill:#000000;fill-opacity:1">Sherbrooke</tspan>
+    </text>
+  </g>
+</svg>
