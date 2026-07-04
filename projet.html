@@ -12,6 +12,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
 </head>
 <body class="subpage">
 
@@ -67,14 +75,24 @@
     <div class="section-head reveal">
       <span class="label">01 — Notre bateau</span>
       <h2>Un Moth qui apprend de chaque sortie.</h2>
+      <div class="stage-tabs">
+        <button class="stage-tab active" id="tab-video">Vidéo</button>
+        <button class="stage-tab" id="tab-3d">Explorer en 3D</button>
+      </div>
     </div>
     <div class="stl-stage reveal">
-      <video class="bateau-video" autoplay muted loop playsinline src="media/ANIMATIONBATEAU.mp4"></video>
-      <div class="stl-overlay">
-        VIDÉO · MarlinMainAnimation<br>
+      <video class="bateau-video" id="bateau-video" autoplay muted loop playsinline src="media/ANIMATIONBATEAU.mp4"></video>
+      <div id="stl-canvas-wrap"></div>
+      <div class="stl-loading" id="stl-loading" style="display:none;">
+        <span id="stl-loading-text">Chargement du modèle 3D…</span>
+        <div class="stl-loading-bar"></div>
+      </div>
+      <div class="stl-overlay" id="stage-overlay">
+        VIDÉO · ANIMATIONBATEAU<br>
         <span class="v">FORMAT</span> MP4 · <span class="v">BOUCLE</span> OUI<br>
         AUTO-PLAY · MUTE
       </div>
+      <div class="stl-hint" id="stl-hint" style="display:none;">Glisser pour pivoter · Molette pour zoomer</div>
     </div>
     <div class="subsystems reveal">
       <div class="subsys-card"><div class="num">/ 01</div><h3>Hydrodynamique</h3><p>Profils de foils optimisés par CFD et validation au bassin. Concevoir des foils, c'est aussi s'exercer à dessiner de vraies ailes d'avion — un excellent terrain pour l'aéronautique.</p></div>
@@ -200,39 +218,139 @@
   </div>
 </footer>
 
+<script src="main.js"></script>
+<script type="module">
+// ============ VISIONNEUSE 3D (three.js, chargée à la demande) ============
+const tabVideo = document.getElementById('tab-video');
+const tab3D = document.getElementById('tab-3d');
+const video = document.getElementById('bateau-video');
+const wrap = document.getElementById('stl-canvas-wrap');
+const loading = document.getElementById('stl-loading');
+const overlay = document.getElementById('stage-overlay');
+const hint = document.getElementById('stl-hint');
+
+let viewer = null; // { renderer, controls, animateId }
+let viewerReady = false;
+
+function showVideo() {
+  tabVideo.classList.add('active'); tab3D.classList.remove('active');
+  video.style.display = ''; video.play().catch(() => {});
+  wrap.classList.remove('active');
+  hint.style.display = 'none';
+  overlay.innerHTML = 'VIDÉO · ANIMATIONBATEAU<br><span class="v">FORMAT</span> MP4 · <span class="v">BOUCLE</span> OUI<br>AUTO-PLAY · MUTE';
+  if (viewer) viewer.paused = true;
+}
+
+async function show3D() {
+  tab3D.classList.add('active'); tabVideo.classList.remove('active');
+  video.style.display = 'none'; video.pause();
+  wrap.classList.add('active');
+  overlay.innerHTML = 'MODÈLE · bateau.stl<br><span class="v">MOTEUR</span> WebGL · three.js<br>ROTATION AUTO';
+  if (viewerReady) { viewer.paused = false; hint.style.display = ''; return; }
+  if (viewer) return; // chargement déjà en cours
+  viewer = { paused: false };
+  loading.style.display = '';
+  try {
+    const [THREE, { STLLoader }, { OrbitControls }] = await Promise.all([
+      import('three'),
+      import('three/addons/loaders/STLLoader.js'),
+      import('three/addons/controls/OrbitControls.js')
+    ]);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, wrap.clientWidth / wrap.clientHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    wrap.appendChild(renderer.domElement);
+
+    // Éclairage façon studio abyssal
+    scene.add(new THREE.HemisphereLight(0x88ccff, 0x03101a, 1.1));
+    const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(4, 6, 4); scene.add(key);
+    const rim = new THREE.DirectionalLight(0x00e1ff, 1.2); rim.position.set(-5, 2, -4); scene.add(rim);
+    const fill = new THREE.DirectionalLight(0xff6b35, 0.35); fill.position.set(0, -3, 2); scene.add(fill);
+
+    const grid = new THREE.GridHelper(40, 40, 0x1a6e9c, 0x0a3b5c);
+    grid.material.transparent = true; grid.material.opacity = 0.25;
+    scene.add(grid);
+
+    const geometry = await new Promise((res, rej) => {
+      new STLLoader().load('media/bateau.stl', res,
+        (e) => { if (e.total) document.getElementById('stl-loading-text').textContent =
+          `Chargement du modèle 3D… ${Math.round(e.loaded / e.total * 100)}%`; },
+        rej);
+    });
+
+    geometry.center();
+    geometry.computeVertexNormals();
+
+    // Orientation automatique : axe le plus long → horizontal (X),
+    // axe le plus court → vertical (Y)
+    geometry.computeBoundingBox();
+    let d = geometry.boundingBox.getSize(new THREE.Vector3());
+    if (d.y >= d.x && d.y >= d.z) geometry.rotateZ(Math.PI / 2);      // long sur Y -> X
+    else if (d.z >= d.x && d.z >= d.y) geometry.rotateY(Math.PI / 2); // long sur Z -> X
+    geometry.computeBoundingBox();
+    d = geometry.boundingBox.getSize(new THREE.Vector3());
+    if (d.y > d.z) geometry.rotateX(Math.PI / 2);                     // plus plat possible
+    geometry.computeBoundingBox();
+    d = geometry.boundingBox.getSize(new THREE.Vector3());
+
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x9fd8e8, metalness: 0.45, roughness: 0.35,
+      emissive: 0x062231, emissiveIntensity: 0.4
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    // Cadrage automatique sur la plus grande dimension
+    const maxDim = Math.max(d.x, d.y, d.z);
+    const dist = (maxDim / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)))) * 0.95;
+    const dir = new THREE.Vector3(1, 0.5, 1).normalize();
+    camera.position.copy(dir.multiplyScalar(dist));
+    camera.near = dist / 100; camera.far = dist * 10;
+    camera.updateProjectionMatrix();
+    grid.position.y = -d.y / 2 - maxDim * 0.02;
+    grid.scale.setScalar(maxDim / 20);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 1.2;
+    controls.minDistance = dist * 0.3;
+    controls.maxDistance = dist * 2.2;
+    controls.target.set(0, 0, 0);
+
+    window.addEventListener('resize', () => {
+      camera.aspect = wrap.clientWidth / wrap.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+    });
+
+    (function animate() {
+      requestAnimationFrame(animate);
+      if (viewer.paused) return;
+      controls.update();
+      renderer.render(scene, camera);
+    })();
+
+    viewer.renderer = renderer;
+    viewerReady = true;
+    loading.style.display = 'none';
+    hint.style.display = '';
+  } catch (err) {
+    console.error('Visionneuse 3D indisponible :', err);
+    loading.style.display = 'none';
+    viewer = null;
+    showVideo();
+  }
+}
+
+tabVideo.addEventListener('click', showVideo);
+tab3D.addEventListener('click', show3D);
+</script>
 <script>
-// ============ REVEAL ============
-const reveals = document.querySelectorAll('.reveal');
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-}, { threshold: 0.1 });
-reveals.forEach(el => io.observe(el));
-
-// ============ HAMBURGER ============
-const hamburger = document.getElementById('hamburger');
-const mobileNav = document.getElementById('mobile-nav');
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('active');
-  mobileNav.classList.toggle('open');
-  document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
-});
-document.querySelectorAll('.mobile-link').forEach(link => {
-  link.addEventListener('click', () => {
-    hamburger.classList.remove('active');
-    mobileNav.classList.remove('open');
-    document.body.style.overflow = '';
-  });
-});
-
-// ============ LANG TOGGLE ============
-const langBtn = document.getElementById('lang-toggle');
-let isEN = false;
-langBtn.addEventListener('click', () => {
-  isEN = !isEN;
-  langBtn.textContent = isEN ? 'EN / FR' : 'FR / EN';
-  document.documentElement.lang = isEN ? 'en' : 'fr';
-});
-
 // ============ NEURAL NETWORK ============
 const nc = document.getElementById('neural-canvas');
 if (nc) {

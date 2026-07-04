@@ -37,6 +37,13 @@
 </head>
 <body>
 
+<!-- Intro sonar (une fois par session) -->
+<div class="intro" id="intro">
+  <div class="intro-sonar"><div class="dot"></div></div>
+  <div class="intro-word"><span>M</span><span>A</span><span>R</span><span>L</span><span>I</span><span>N</span></div>
+  <div class="intro-bar"></div>
+</div>
+
 <div class="grid-bg"></div>
 
 <!-- ============ NAV ============ -->
@@ -107,6 +114,17 @@
         <div class="countdown-item"><div class="countdown-val" id="cd-secs">--</div><div class="countdown-label">Secondes</div></div>
       </div>
       <div class="countdown-title">SuMoTh International Challenge — 2027</div>
+
+      <!-- Télémétrie simulée -->
+      <div class="telemetry" aria-hidden="true">
+        <div class="telemetry-head"><span class="rec"></span> Télémétrie embarquée · simulation</div>
+        <div class="telemetry-grid">
+          <div class="telemetry-cell"><div class="tk">Vitesse</div><div class="tv" id="tm-speed">27.4 <small>nds</small></div></div>
+          <div class="telemetry-cell"><div class="tk">Altitude foils</div><div class="tv" id="tm-alt">58 <small>cm</small></div></div>
+          <div class="telemetry-cell"><div class="tk">Angle d'attaque</div><div class="tv" id="tm-angle">2.6 <small>°</small></div></div>
+          <div class="telemetry-cell"><div class="tk">Acquisition</div><div class="tv" id="tm-hz">200 <small>Hz</small></div></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -116,6 +134,18 @@
     <div class="item">Statut<span style="color: var(--signal);">● En développement</span></div>
   </div>
 </section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marquee-track">
+    <span class="marquee-item"><strong>SuMoTh Challenge 2027</strong> · Lac de Garde, Italie</span>
+    <span class="marquee-item">30 nœuds en vol</span>
+    <span class="marquee-item"><strong>Hydrodynamique</strong> · CFD &amp; bassin d'essai</span>
+    <span class="marquee-item">IA embarquée · 1000× plus rapide que le solveur</span>
+    <span class="marquee-item"><strong>Écoconception</strong> · Analyse de cycle de vie</span>
+    <span class="marquee-item">Université de Sherbrooke · Faculté de génie</span>
+  </div>
+</div>
 
 <!-- ============ DÉFI + SUMOTH ============ -->
 <section class="defi" id="defi">
@@ -138,25 +168,40 @@
         </div>
       </div>
       <div class="defi-stats">
-        <div class="stat"><div class="stat-num">30<span class="unit"> nds</span></div><div class="stat-label">Vitesse cible</div></div>
-        <div class="stat"><div class="stat-num">60<span class="unit"> cm</span></div><div class="stat-label">Hauteur de vol</div></div>
-        <div class="stat"><div class="stat-num">15+</div><div class="stat-label">Équipes mondiales</div></div>
-        <div class="stat"><div class="stat-num">04</div><div class="stat-label">Critères de jugement</div></div>
+        <div class="stat"><div class="stat-num"><span data-count="30">0</span><span class="unit"> nds</span></div><div class="stat-label">Vitesse cible</div></div>
+        <div class="stat"><div class="stat-num"><span data-count="60">0</span><span class="unit"> cm</span></div><div class="stat-label">Hauteur de vol</div></div>
+        <div class="stat"><div class="stat-num"><span data-count="15" data-suffix="+">0</span></div><div class="stat-label">Équipes mondiales</div></div>
+        <div class="stat"><div class="stat-num"><span data-count="4" data-prefix="0">0</span></div><div class="stat-label">Critères de jugement</div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ FOILING ============ -->
+<!-- ============ FOILING : DÉCOLLAGE AU SCROLL ============ -->
 <section class="foiling" id="foiling">
-  <div class="foiling-bg"></div>
-  <div class="foiling-waves">
-    <svg viewBox="0 0 2400 200" fill="none"><path d="M0 100Q300 50 600 100Q900 150 1200 100Q1500 50 1800 100Q2100 150 2400 100L2400 200L0 200Z" fill="rgba(0,225,255,0.05)" stroke="rgba(0,225,255,0.15)" stroke-width="1"/><path d="M0 130Q300 90 600 130Q900 170 1200 130Q1500 90 1800 130Q2100 170 2400 130L2400 200L0 200Z" fill="rgba(10,59,92,0.3)"/></svg>
-  </div>
-  <div class="foiling-content">
-    <div class="foiling-visual reveal">
-      <div class="foiling-boat">
-        <svg width="400" height="320" viewBox="0 0 400 320" fill="none" style="filter: drop-shadow(0 0 40px rgba(0,225,255,0.3));">
+  <div class="foiling-sticky">
+    <div class="foiling-bg"></div>
+    <div class="fly-speedlines" id="fly-speedlines"></div>
+    <div class="foiling-waves">
+      <svg viewBox="0 0 2400 200" preserveAspectRatio="none" fill="none"><path d="M0 100Q300 50 600 100Q900 150 1200 100Q1500 50 1800 100Q2100 150 2400 100L2400 200L0 200Z" fill="rgba(0,225,255,0.05)" stroke="rgba(0,225,255,0.15)" stroke-width="1"/><path d="M0 130Q300 90 600 130Q900 170 1200 130Q1500 90 1800 130Q2100 170 2400 130L2400 200L0 200Z" fill="rgba(10,59,92,0.45)"/></svg>
+    </div>
+
+    <div class="foiling-stage">
+      <div class="foiling-head">
+        <span class="label">Scrollez — le bateau décolle</span>
+        <h2>Né pour<br><span class="accent">voler.</span></h2>
+      </div>
+
+      <div class="fly-hud" aria-hidden="true">
+        <div class="fly-row"><span class="k">Vitesse</span><span><span class="v" id="fly-speed">5</span> <span class="u">nds</span></span></div>
+        <div class="fly-row"><span class="k">Altitude</span><span><span class="v" id="fly-alt">0</span> <span class="u">cm</span></span></div>
+        <div class="fly-row"><span class="k">Traînée</span><span><span class="v" id="fly-drag">100</span> <span class="u">%</span></span></div>
+      </div>
+
+      <div class="alt-ruler"><span class="alt-label">60 cm</span><div class="alt-fill" id="alt-fill"></div></div>
+
+      <div class="foiling-boat" id="fly-boat">
+        <svg viewBox="0 0 400 250" fill="none" style="filter: drop-shadow(0 0 40px rgba(0,225,255,0.3));">
           <path d="M50 120Q130 80 200 75Q280 70 350 120Q280 135 200 140Q130 140 50 120Z" stroke="#00e1ff" stroke-width="1.5" fill="rgba(0,225,255,0.06)"/>
           <line x1="200" y1="80" x2="200" y2="10" stroke="#00e1ff" stroke-width="2"/>
           <path d="M200 15L200 80L290 60Z" stroke="#00e1ff" stroke-width="1.2" fill="rgba(0,225,255,0.08)"/>
@@ -166,20 +211,13 @@
           <path d="M140 220Q200 212 260 220Q200 228 140 220Z" stroke="#ff6b35" stroke-width="1.5" fill="rgba(255,107,53,0.12)"/>
           <line x1="340" y1="135" x2="340" y2="195" stroke="#00e1ff" stroke-width="1.2"/>
           <path d="M310 195Q340 190 370 195Q340 200 310 195Z" stroke="#ff6b35" stroke-width="1" fill="rgba(255,107,53,0.1)"/>
-          <line x1="10" y1="240" x2="390" y2="240" stroke="#1a6e9c" stroke-width="0.8" stroke-dasharray="6 4" opacity="0.5"/>
-          <line x1="20" y1="100" x2="45" y2="100" stroke="#00e1ff" stroke-width="0.5" opacity="0.3"/>
-          <line x1="10" y1="110" x2="40" y2="110" stroke="#00e1ff" stroke-width="0.5" opacity="0.2"/>
-          <line x1="25" y1="120" x2="48" y2="120" stroke="#00e1ff" stroke-width="0.5" opacity="0.15"/>
         </svg>
       </div>
-    </div>
-    <div class="foiling-text reveal">
-      <h2>Né pour <span class="accent">voler.</span></h2>
-      <p>À pleine vitesse, la coque du Moth quitte entièrement la surface. Seuls les foils restent immergés — le bateau vole au-dessus de l'eau, réduisant la traînée de 80%.</p>
-      <div class="speed-readout">
-        <div class="speed-item"><div class="speed-val">30</div><div class="speed-unit">nœuds max</div></div>
-        <div class="speed-item"><div class="speed-val">60</div><div class="speed-unit">cm altitude</div></div>
-        <div class="speed-item"><div class="speed-val">-80%</div><div class="speed-unit">traînée en vol</div></div>
+
+      <div class="fly-caption">
+        <span class="phase-tag" id="fly-phase">Phase 01 — Mode archimédien</span>
+        <p id="fly-text">À basse vitesse, la coque porte le bateau. La traînée est maximale.</p>
+        <div class="fly-progress"><span id="fly-progress-bar"></span></div>
       </div>
     </div>
   </div>
@@ -267,18 +305,8 @@
   </div>
 </footer>
 
+<script src="main.js"></script>
 <script>
-// ============ NAV SCROLL ============
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
-
-// ============ REVEAL ============
-const reveals = document.querySelectorAll('.reveal');
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-}, { threshold: 0.1 });
-reveals.forEach(el => io.observe(el));
-
 // ============ HERO PARTICLES ============
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
@@ -300,6 +328,14 @@ function resize() {
 resize();
 window.addEventListener('resize', resize);
 
+// Interaction curseur : les particules proches sont reliées et légèrement repoussées
+let mouseX = -9999, mouseY = -9999;
+canvas.parentElement.addEventListener('pointermove', (e) => {
+  const r = canvas.getBoundingClientRect();
+  mouseX = e.clientX - r.left; mouseY = e.clientY - r.top;
+}, { passive: true });
+canvas.parentElement.addEventListener('pointerleave', () => { mouseX = -9999; mouseY = -9999; });
+
 let t = 0;
 function drawHero() {
   ctx.clearRect(0, 0, w, h);
@@ -319,6 +355,16 @@ function drawHero() {
     }
   }
   heroP.forEach(p => {
+    // Répulsion douce autour du curseur + fil lumineux
+    const mdx = p.x - mouseX, mdy = p.y - mouseY;
+    const md = Math.sqrt(mdx * mdx + mdy * mdy);
+    if (md < 160 && md > 0.1) {
+      const f = (1 - md / 160) * 0.35;
+      p.x += (mdx / md) * f; p.y += (mdy / md) * f;
+      ctx.strokeStyle = `rgba(0, 225, 255, ${(1 - md / 160) * 0.25})`;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mouseX, mouseY); ctx.stroke();
+    }
     p.x += p.vx; p.y += p.vy;
     if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
     if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
@@ -334,6 +380,32 @@ function drawHero() {
     ctx.strokeStyle = `rgba(0, 225, 255, ${(1 - phase) * 0.08})`;
     ctx.lineWidth = 1;
     ctx.beginPath(); ctx.arc(ringX, ringY, radius, 0, Math.PI * 2); ctx.stroke();
+  }
+
+  // Océan : houle superposée au bas du héros
+  for (let layer = 0; layer < 3; layer++) {
+    const baseY = h * (0.86 + layer * 0.045);
+    const amp = 7 + layer * 5;
+    const speed = t * (30 + layer * 18);
+    const alpha = 0.10 - layer * 0.025;
+    ctx.beginPath();
+    ctx.moveTo(0, h);
+    for (let x = 0; x <= w; x += 8) {
+      const y = baseY
+        + Math.sin(x * 0.008 + speed) * amp
+        + Math.sin(x * 0.021 - speed * 0.7) * amp * 0.4;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(w, h);
+    ctx.closePath();
+    const grad = ctx.createLinearGradient(0, h * 0.84, 0, h);
+    grad.addColorStop(0, `rgba(0, 225, 255, ${alpha})`);
+    grad.addColorStop(1, 'rgba(10, 59, 92, 0.05)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.strokeStyle = `rgba(0, 225, 255, ${alpha * 1.6})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
   }
 
   requestAnimationFrame(drawHero);
@@ -358,38 +430,90 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-// ============ SMOOTH NAV ============
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const target = document.querySelector(a.getAttribute('href'));
-    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-  });
-});
-
-// ============ HAMBURGER ============
-const hamburger = document.getElementById('hamburger');
-const mobileNav = document.getElementById('mobile-nav');
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('active');
-  mobileNav.classList.toggle('open');
-  document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
-});
-document.querySelectorAll('.mobile-link').forEach(link => {
-  link.addEventListener('click', () => {
-    hamburger.classList.remove('active');
-    mobileNav.classList.remove('open');
+// ============ INTRO SONAR (une fois par session) ============
+const intro = document.getElementById('intro');
+if (sessionStorage.getItem('marlin-intro')) {
+  intro.remove();
+} else {
+  sessionStorage.setItem('marlin-intro', '1');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => {
+    intro.classList.add('done');
     document.body.style.overflow = '';
-  });
-});
+    setTimeout(() => intro.remove(), 800);
+  }, 1400);
+}
 
-// ============ LANG TOGGLE ============
-const langBtn = document.getElementById('lang-toggle');
-let isEN = false;
-langBtn.addEventListener('click', () => {
-  isEN = !isEN;
-  langBtn.textContent = isEN ? 'EN / FR' : 'FR / EN';
-  document.documentElement.lang = isEN ? 'en' : 'fr';
-});
+// ============ TÉLÉMÉTRIE SIMULÉE ============
+(function telemetry() {
+  const walk = (cur, target, jitter) => cur + (target - cur) * 0.05 + (Math.random() - 0.5) * jitter;
+  let sp = 27.4, al = 58, an = 2.6;
+  const elS = document.getElementById('tm-speed');
+  const elA = document.getElementById('tm-alt');
+  const elN = document.getElementById('tm-angle');
+  const elH = document.getElementById('tm-hz');
+  if (!elS) return;
+  setInterval(() => {
+    sp = walk(sp, 27.5, 0.9); al = walk(al, 58, 2.4); an = walk(an, 2.5, 0.5);
+    elS.innerHTML = sp.toFixed(1) + ' <small>nds</small>';
+    elA.innerHTML = Math.round(al) + ' <small>cm</small>';
+    elN.innerHTML = an.toFixed(1) + ' <small>°</small>';
+    elH.innerHTML = (199 + ((Math.random() * 3) | 0)) + ' <small>Hz</small>';
+  }, 180);
+})();
+
+// ============ DÉCOLLAGE AU SCROLL ============
+(function flightScene() {
+  const section = document.getElementById('foiling');
+  const boat = document.getElementById('fly-boat');
+  if (!section || !boat) return;
+  const elSpeed = document.getElementById('fly-speed');
+  const elAlt = document.getElementById('fly-alt');
+  const elDrag = document.getElementById('fly-drag');
+  const elPhase = document.getElementById('fly-phase');
+  const elText = document.getElementById('fly-text');
+  const altFill = document.getElementById('alt-fill');
+  const speedlines = document.getElementById('fly-speedlines');
+  const progressBar = document.getElementById('fly-progress-bar');
+
+  const PHASES = [
+    ['Phase 01 — Mode archimédien', 'À basse vitesse, la coque porte le bateau. La traînée est maximale.'],
+    ['Phase 02 — Transition', 'Les foils génèrent de la portance. La coque s\'allège, le bateau accélère.'],
+    ['Phase 03 — Vol stabilisé', 'La coque quitte l\'eau. Seuls les foils restent immergés : -80% de traînée.']
+  ];
+  let phaseIdx = -1;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function update() {
+    const rect = section.getBoundingClientRect();
+    const track = rect.height - window.innerHeight;
+    let p = track > 0 ? Math.min(Math.max(-rect.top / track, 0), 1) : 1;
+    if (reduce) p = 1;
+    const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2; // easeInOut
+
+    // Bateau : monte de l'eau jusqu'au vol + assiette qui se cabre puis se stabilise
+    const lift = e * (window.innerHeight * 0.22);
+    const pitch = Math.sin(e * Math.PI) * -4;
+    const bob = Math.sin(performance.now() / 600) * (1 - e) * 5;
+    boat.style.transform = `translateX(-50%) translateY(${(-lift + bob).toFixed(1)}px) rotate(${pitch.toFixed(2)}deg)`;
+
+    elSpeed.textContent = Math.round(5 + 25 * e);
+    elAlt.textContent = Math.round(60 * e);
+    elDrag.textContent = Math.round(100 - 80 * e);
+    altFill.style.height = (e * 100).toFixed(1) + '%';
+    speedlines.style.opacity = Math.max(0, (e - 0.55) * 1.6).toFixed(2);
+    progressBar.style.transform = `scaleX(${p.toFixed(3)})`;
+
+    const idx = p < 0.33 ? 0 : p < 0.72 ? 1 : 2;
+    if (idx !== phaseIdx) {
+      phaseIdx = idx;
+      elPhase.textContent = PHASES[idx][0];
+      elText.textContent = PHASES[idx][1];
+    }
+  }
+  if (reduce) { update(); return; }
+  (function loop() { update(); requestAnimationFrame(loop); })();
+})();
 </script>
 
 </body>

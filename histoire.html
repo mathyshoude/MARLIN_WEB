@@ -528,7 +528,7 @@ footer {
           </div>
           <div class="histoire-image">
             <!-- Remplacer par votre image -->
-            <img src="media/HISTOIRE_FONDATION.png" alt="L'équipe à la fondation">
+            <img loading="lazy" decoding="async" src="media/opt/HISTOIRE_FONDATION.jpg" alt="L'équipe à la fondation">
           </div>
         </div>
       </div>
@@ -547,7 +547,7 @@ footer {
             </div>
           </div>
           <div class="histoire-image">
-            <img src="media/COMITÉ.png" alt="COMITÉ">
+            <img loading="lazy" decoding="async" src="media/opt/COMITÉ.jpg" alt="COMITÉ">
           </div>
         </div>
       </div>
@@ -585,7 +585,7 @@ footer {
             </div>
           </div>
           <div class="histoire-image">
-            <img src="media/CAP_LAC_GARDE.jpg" alt="COMPÉTITION À VENIR">
+            <img loading="lazy" decoding="async" src="media/opt/CAP_LAC_GARDE.jpg" alt="COMPÉTITION À VENIR">
           </div>
         </div>
       </div>
@@ -731,48 +731,7 @@ footer {
   </div>
 </footer>
 
-<script>
-// ============ REVEAL ============
-const reveals = document.querySelectorAll('.reveal');
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-}, { threshold: 0.1 });
-reveals.forEach(el => io.observe(el));
-
-// ============ HAMBURGER ============
-const hamburger = document.getElementById('hamburger');
-const mobileNav = document.getElementById('mobile-nav');
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('active');
-  mobileNav.classList.toggle('open');
-  document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
-});
-document.querySelectorAll('.mobile-link').forEach(link => {
-  link.addEventListener('click', () => {
-    hamburger.classList.remove('active');
-    mobileNav.classList.remove('open');
-    document.body.style.overflow = '';
-  });
-});
-
-// ============ GALERIE TABS ============
-const tabs = document.querySelectorAll('.galerie-tab');
-const items = document.querySelectorAll('.galerie-item');
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    tabs.forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    const filter = tab.dataset.filter;
-    items.forEach(item => {
-      if (filter === 'all' || item.dataset.type === filter) {
-        item.style.display = '';
-      } else {
-        item.style.display = 'none';
-      }
-    });
-  });
-});
-</script>
+<script src="main.js"></script>
 
 </body>
 </html>

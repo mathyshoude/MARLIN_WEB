@@ -176,39 +176,7 @@
   </div>
 </footer>
 
-<script>
-// ============ REVEAL ============
-const reveals = document.querySelectorAll('.reveal');
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-}, { threshold: 0.1 });
-reveals.forEach(el => io.observe(el));
-
-// ============ HAMBURGER ============
-const hamburger = document.getElementById('hamburger');
-const mobileNav = document.getElementById('mobile-nav');
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('active');
-  mobileNav.classList.toggle('open');
-  document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
-});
-document.querySelectorAll('.mobile-link').forEach(link => {
-  link.addEventListener('click', () => {
-    hamburger.classList.remove('active');
-    mobileNav.classList.remove('open');
-    document.body.style.overflow = '';
-  });
-});
-
-// ============ LANG TOGGLE ============
-const langBtn = document.getElementById('lang-toggle');
-let isEN = false;
-langBtn.addEventListener('click', () => {
-  isEN = !isEN;
-  langBtn.textContent = isEN ? 'EN / FR' : 'FR / EN';
-  document.documentElement.lang = isEN ? 'en' : 'fr';
-});
-</script>
+<script src="main.js"></script>
 
 </body>
 </html>
