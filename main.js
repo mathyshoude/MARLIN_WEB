@@ -1,25 +1,139 @@
 /* ============================================================
    MARLIN — Moteur d'interactions partagé
-   Scroll, reveals, tilt 3D, compteurs, curseur, magnétisme
+   Nav, reveals, compteurs, filtres, compte à rebours
+   + la traversée : un Moth qui parcourt le site au scroll
    ============================================================ */
 (() => {
 'use strict';
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const finePointer = window.matchMedia('(pointer: fine)').matches;
 
 /* ============ PAGE FADE-IN ============ */
 document.documentElement.classList.add('js');
 window.addEventListener('DOMContentLoaded', () => {
   document.body.classList.add('page-loaded');
 });
+window.addEventListener('pageshow', () => {
+  document.body.classList.add('page-loaded');
+});
 
-/* ============ SCROLL PROGRESS + NAV + BACK TO TOP ============ */
+/* ============ LA TRAVERSÉE — Sherbrooke → Lac de Garde ============ */
+/* Un Moth à foils longe la ligne de flottaison au bas de l'écran.
+   Sa position = progression du scroll. Il monte sur ses foils
+   quand on scrolle vite, et se repose sur sa coque à l'arrêt. */
+const voyage = document.createElement('div');
+voyage.className = 'voyage';
+voyage.setAttribute('aria-hidden', 'true');
+voyage.innerHTML = `
+  <div class="voyage-line"></div>
+  <span class="voyage-port start">Sherbrooke · 45.40° N</span>
+  <span class="voyage-port end">Lac de Garde · 45.64° N</span>
+  <span class="voyage-pct" id="voyage-pct">0%</span>
+  <div class="voyage-wake" id="voyage-wake"></div>
+  <div class="voyage-boat" id="voyage-boat">
+    <svg viewBox="0 0 140 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g id="voyage-hull">
+        <!-- Voile -->
+        <path d="M63 10 Q60 38 62 60 L104 52 Q88 24 66 10 Z" fill="#ff5c38" opacity="0.94"/>
+        <path d="M66 22 L92 40" stroke="#d94422" stroke-width="1" opacity="0.6"/>
+        <path d="M64 36 L98 47" stroke="#d94422" stroke-width="1" opacity="0.6"/>
+        <!-- Mât -->
+        <line x1="63" y1="8" x2="63" y2="64" stroke="#f2f7f9" stroke-width="2.4" stroke-linecap="round"/>
+        <!-- Coque -->
+        <path d="M30 64 Q58 57 78 59 Q98 60 112 64 Q92 72 60 71 Q40 70 30 64 Z" fill="#0b2434" stroke="#f2f7f9" stroke-width="2"/>
+        <!-- Bras des ailes -->
+        <line x1="40" y1="66" x2="22" y2="61" stroke="#f2f7f9" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="100" y1="66" x2="120" y2="61" stroke="#f2f7f9" stroke-width="1.6" stroke-linecap="round"/>
+      </g>
+      <g id="voyage-foils">
+        <!-- Dérive + foil principal en T -->
+        <line x1="66" y1="70" x2="66" y2="92" stroke="#f2f7f9" stroke-width="2"/>
+        <path d="M48 92 Q66 87 84 92" stroke="#6fd3e0" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+        <!-- Safran + foil arrière -->
+        <line x1="106" y1="68" x2="106" y2="86" stroke="#f2f7f9" stroke-width="1.7"/>
+        <path d="M96 86 Q106 82.5 116 86" stroke="#6fd3e0" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </g>
+    </svg>
+  </div>`;
+document.body.appendChild(voyage);
+
+const boat = document.getElementById('voyage-boat');
+const wake = document.getElementById('voyage-wake');
+const pctEl = document.getElementById('voyage-pct');
+
+let vProgress = 0, vShown = 0, vSpeed = 0, lastY = window.scrollY;
+
+function voyageFrame(now) {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  vProgress = max > 60 ? Math.min(window.scrollY / max, 1) : 0;
+
+  // Vitesse de scroll lissée → gîte et vol sur foils
+  const dy = window.scrollY - lastY;
+  lastY = window.scrollY;
+  vSpeed += (Math.min(Math.abs(dy), 60) - vSpeed) * 0.08;
+
+  // Position lissée le long de la route
+  vShown += (vProgress - vShown) * 0.1;
+
+  const travel = window.innerWidth - boat.offsetWidth - 16;
+  const x = 8 + vShown * Math.max(travel, 0);
+  const foiling = Math.min(vSpeed / 22, 1);           // 0 = posé, 1 = plein vol
+  const lift = foiling * 14;                          // la coque sort de l'eau
+  const heel = foiling * -5;                          // légère assiette cabrée
+  const bob = reduceMotion ? 0 : Math.sin(now / 650) * (1 - foiling) * 2.2;
+
+  boat.style.transform =
+    `translateX(${x.toFixed(1)}px) translateY(${(bob - lift).toFixed(1)}px) rotate(${heel.toFixed(2)}deg)`;
+
+  wake.style.opacity = (foiling * 0.85).toFixed(2);
+  wake.style.transform = `translateX(${(x - 58).toFixed(1)}px)`;
+
+  if (pctEl) pctEl.textContent = Math.round(vProgress * 100) + '%';
+
+  requestAnimationFrame(voyageFrame);
+}
+if (reduceMotion) {
+  // Position statique mise à jour au scroll, sans animation continue
+  const staticUpdate = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const p = max > 60 ? Math.min(window.scrollY / max, 1) : 0;
+    const travel = window.innerWidth - boat.offsetWidth - 16;
+    boat.style.transform = `translateX(${(8 + p * Math.max(travel, 0)).toFixed(1)}px)`;
+    if (pctEl) pctEl.textContent = Math.round(p * 100) + '%';
+  };
+  window.addEventListener('scroll', staticUpdate, { passive: true });
+  staticUpdate();
+} else {
+  requestAnimationFrame(voyageFrame);
+}
+
+/* ============ LIGNES DE PROFONDEUR (transitions de sections) ============ */
+/* Chaque frontière de section affiche la profondeur atteinte, façon
+   relevé bathymétrique : la page « plonge » à mesure qu'on descend. */
+document.querySelectorAll('section + section').forEach(s => {
+  const d = document.createElement('div');
+  d.className = 'waterline';
+  d.setAttribute('aria-hidden', 'true');
+  s.parentNode.insertBefore(d, s);
+});
+
+function updateDepths() {
+  document.querySelectorAll('.waterline').forEach(w => {
+    const top = w.getBoundingClientRect().top + window.scrollY;
+    const depth = Math.max(2, Math.round(top / 55));
+    w.dataset.depth = 'PROF. ' + String(depth).padStart(4, '0') + ' M';
+  });
+}
+updateDepths();
+window.addEventListener('load', updateDepths);
+let depthResizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(depthResizeTimer);
+  depthResizeTimer = setTimeout(updateDepths, 200);
+});
+
+/* ============ NAV + RETOUR EN HAUT ============ */
 const nav = document.getElementById('nav');
-
-const progress = document.createElement('div');
-progress.className = 'scroll-progress';
-document.body.appendChild(progress);
 
 const backTop = document.createElement('button');
 backTop.className = 'back-top';
@@ -34,9 +148,7 @@ function onScroll() {
   ticking = true;
   requestAnimationFrame(() => {
     const y = window.scrollY;
-    if (nav) nav.classList.toggle('scrolled', y > 50);
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    progress.style.transform = `scaleX(${max > 0 ? Math.min(y / max, 1) : 0})`;
+    if (nav) nav.classList.toggle('scrolled', y > 40);
     backTop.classList.toggle('show', y > 700);
     ticking = false;
   });
@@ -46,10 +158,9 @@ onScroll();
 
 /* ============ REVEALS + STAGGER AUTO ============ */
 const STAGGER_CONTAINERS = [
-  '.explore-grid', '.subsystems', '.team-grid', '.recruit-grid',
-  '.objectives-grid', '.poles-grid', '.tiers', '.partner-showcase',
-  '.defi-stats', '.neural-stats', '.galerie-grid', '.partners-real',
-  '.sponsor-tier-grid', '.pcb-specs'
+  '.subsystems', '.team-grid', '.recruit-grid', '.pillars',
+  '.defi-stats', '.neural-stats', '.galerie-grid', '.tiers',
+  '.sponsor-tier-grid', '.pcb-specs', '.flight-phases', '.explore-list'
 ];
 document.querySelectorAll(STAGGER_CONTAINERS.join(',')).forEach(grid => {
   [...grid.children].forEach((child, i) => {
@@ -65,96 +176,6 @@ const io = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-/* ============ TITRES : explosion lettre par lettre ============ */
-function splitTitle(el) {
-  if (el.dataset.split || reduceMotion) return;
-  el.dataset.split = '1';
-  let idx = 0;
-  (function walk(node) {
-    [...node.childNodes].forEach(child => {
-      if (child.nodeType === 3) {
-        const frag = document.createDocumentFragment();
-        child.textContent.split(/(\s+)/).forEach(part => {
-          if (!part) return;
-          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
-          const w = document.createElement('span'); w.className = 'sw';
-          [...part].forEach(ch => {
-            const c = document.createElement('span'); c.className = 'sl';
-            c.textContent = ch;
-            c.style.setProperty('--li', idx++);
-            w.appendChild(c);
-          });
-          frag.appendChild(w);
-        });
-        node.replaceChild(frag, child);
-      } else if (child.nodeType === 1 && child.tagName !== 'BR') {
-        walk(child);
-      }
-    });
-  })(el);
-  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('title-in')));
-}
-document.querySelectorAll('.hero h1, .page-hero h1').forEach(splitTitle);
-
-/* ============ LABELS : effet décodage terminal ============ */
-const SCRAMBLE_CHARS = '▖▗▘▝█/\\<>+=·01';
-function scrambleIn(el) {
-  const finalText = el.textContent;
-  const len = finalText.length;
-  const dur = Math.min(900, 350 + len * 28);
-  const t0 = performance.now();
-  (function tick(now) {
-    const p = Math.min((now - t0) / dur, 1);
-    const settled = Math.floor(p * len);
-    let out = finalText.slice(0, settled);
-    for (let i = settled; i < len; i++) {
-      out += finalText[i] === ' ' ? ' ' : SCRAMBLE_CHARS[(Math.random() * SCRAMBLE_CHARS.length) | 0];
-    }
-    el.textContent = out;
-    if (p < 1) requestAnimationFrame(tick);
-    else el.textContent = finalText;
-  })(t0);
-}
-if (!reduceMotion) {
-  const scrambleIO = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { scrambleIO.unobserve(e.target); scrambleIn(e.target); }
-    });
-  }, { threshold: 0.5 });
-  document.querySelectorAll('.label, .countdown-title, .stl-overlay, .pcb-label-overlay').forEach(el => {
-    if (!el.querySelector('*')) scrambleIO.observe(el); // texte simple uniquement
-  });
-}
-
-/* ============ TRANSITIONS DE PAGE (rideau) ============ */
-if (!reduceMotion) {
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[href]');
-    if (!a || a.target === '_blank' || e.metaKey || e.ctrlKey || e.shiftKey) return;
-    const href = a.getAttribute('href');
-    if (href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
-    const url = new URL(a.href, location.href);
-    if (url.origin !== location.origin) return;
-    if (url.pathname === location.pathname && url.hash) return;
-    e.preventDefault();
-    const wipe = document.createElement('div');
-    wipe.className = 'page-wipe';
-    wipe.innerHTML = '<span class="page-wipe-tag">MARLIN ▸ chargement</span>';
-    document.body.appendChild(wipe);
-    requestAnimationFrame(() => requestAnimationFrame(() => wipe.classList.add('in')));
-    setTimeout(() => { location.href = url.href; }, 420);
-  });
-  // Retour via bfcache : nettoyer le rideau
-  window.addEventListener('pageshow', () => {
-    document.querySelectorAll('.page-wipe').forEach(w => w.remove());
-    document.body.classList.add('page-loaded');
-  });
-}
-
-/* ============ MARQUEE : duplication pour boucle infinie ============ */
-const marqueeTrack = document.getElementById('marquee-track');
-if (marqueeTrack) marqueeTrack.innerHTML += marqueeTrack.innerHTML;
 
 /* ============ COMPTEURS ANIMÉS [data-count] ============ */
 const fmt = new Intl.NumberFormat('fr-CA');
@@ -181,89 +202,23 @@ const counterIO = new IntersectionObserver((entries) => {
 }, { threshold: 0.6 });
 document.querySelectorAll('[data-count]').forEach(el => counterIO.observe(el));
 
-/* ============ TILT 3D + LUEUR SUIVEUSE (cartes) ============ */
-const TILT_SELECTOR = [
-  '.explore-card', '.subsys-card', '.recruit-card', '.objective-card',
-  '.pole-card', '.tier-card', '.neural-stat', '.stat', '.journal-card',
-  '.partner-item'
-].join(',');
-
-if (finePointer && !reduceMotion) {
-  document.querySelectorAll(TILT_SELECTOR).forEach(card => {
-    card.classList.add('glow-card');
-    let raf = null;
-    card.addEventListener('pointermove', (e) => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        const r = card.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width;
-        const py = (e.clientY - r.top) / r.height;
-        card.style.setProperty('--mx', (px * 100) + '%');
-        card.style.setProperty('--my', (py * 100) + '%');
-        const rx = (0.5 - py) * 6;
-        const ry = (px - 0.5) * 6;
-        card.style.transform = `perspective(800px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateY(-4px)`;
-        card.style.transition = 'transform 0.08s ease-out, border-color 0.3s, box-shadow 0.3s';
-        raf = null;
-      });
-    });
-    card.addEventListener('pointerleave', () => {
-      card.style.transform = '';
-      card.style.transition = '';
-    });
-  });
-}
-
-/* ============ BOUTONS MAGNÉTIQUES ============ */
-if (finePointer && !reduceMotion) {
-  document.querySelectorAll('.btn').forEach(btn => {
-    btn.addEventListener('pointermove', (e) => {
-      const r = btn.getBoundingClientRect();
-      const dx = e.clientX - (r.left + r.width / 2);
-      const dy = e.clientY - (r.top + r.height / 2);
-      btn.style.transform = `translate(${dx * 0.15}px, ${dy * 0.25}px)`;
-    });
-    btn.addEventListener('pointerleave', () => { btn.style.transform = ''; });
-  });
-}
-
-/* ============ CURSEUR LUMINEUX ============ */
-if (finePointer && !reduceMotion) {
-  const glow = document.createElement('div');
-  glow.className = 'cursor-glow';
-  const ring = document.createElement('div');
-  ring.className = 'cursor-ring';
-  document.body.append(glow, ring);
-
-  let mx = -200, my = -200, rx = -200, ry = -200;
-  window.addEventListener('pointermove', (e) => {
-    mx = e.clientX; my = e.clientY;
-    glow.style.transform = `translate(${mx}px, ${my}px)`;
-    const t = e.target.closest('a, button, .galerie-item, input, textarea');
-    ring.classList.toggle('on-link', !!t);
-  }, { passive: true });
-
-  (function followRing() {
-    rx += (mx - rx) * 0.16;
-    ry += (my - ry) * 0.16;
-    ring.style.transform = `translate(${rx}px, ${ry}px)`;
-    requestAnimationFrame(followRing);
-  })();
-
-  document.addEventListener('mouseleave', () => { ring.style.opacity = 0; glow.style.opacity = 0; });
-  document.addEventListener('mouseenter', () => { ring.style.opacity = ''; glow.style.opacity = ''; });
-}
-
-/* ============ PARALLAXE DOUCE (héros) ============ */
-const pageHero = document.querySelector('.page-hero .container, .hero-inner');
-if (pageHero && !reduceMotion) {
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    if (y < window.innerHeight) {
-      pageHero.style.transform = `translateY(${y * 0.18}px)`;
-      pageHero.style.opacity = Math.max(1 - y / (window.innerHeight * 0.9), 0);
-    }
-  }, { passive: true });
+/* ============ COMPTE À REBOURS SUMOTH ============ */
+const cdDays = document.getElementById('cd-days');
+if (cdDays) {
+  const COMP_DATE = new Date('2027-07-15T09:00:00+02:00'); // Lac de Garde, Italie
+  const cdH = document.getElementById('cd-hours');
+  const cdM = document.getElementById('cd-mins');
+  const cdS = document.getElementById('cd-secs');
+  const updateCountdown = () => {
+    let diff = COMP_DATE - new Date();
+    if (diff < 0) diff = 0;
+    cdDays.textContent = String(Math.floor(diff / 86400000)).padStart(3, '0');
+    cdH.textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
+    cdM.textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+    cdS.textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+  };
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
 }
 
 /* ============ NAV ACTIVE AUTO ============ */
@@ -298,17 +253,6 @@ if (hamburger && mobileNav) {
   });
 }
 
-/* ============ LANG TOGGLE ============ */
-const langBtn = document.getElementById('lang-toggle');
-if (langBtn) {
-  let isEN = false;
-  langBtn.addEventListener('click', () => {
-    isEN = !isEN;
-    langBtn.textContent = isEN ? 'EN / FR' : 'FR / EN';
-    document.documentElement.lang = isEN ? 'en' : 'fr';
-  });
-}
-
 /* ============ FILTRES (journal + galerie) ============ */
 function bindFilter(btnSel, itemSel, dataKey) {
   const btns = document.querySelectorAll(btnSel);
@@ -338,7 +282,7 @@ if (cform) {
     const email = document.getElementById('cf-email').value;
     const subject = document.getElementById('cf-subject').value || 'Message depuis le site MARLIN';
     const message = document.getElementById('cf-message').value;
-    const body = `${message}\n\n— ${name} (${email})`;
+    const body = `${message}\n\n${name} (${email})`;
     window.location.href = `mailto:marlin@usherbrooke.ca?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   });
 }
