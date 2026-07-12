@@ -5,17 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contact — MARLIN | Université de Sherbrooke</title>
 <meta name="description" content="Contactez l'équipe MARLIN — partenariats, recrutement, presse. Université de Sherbrooke, Faculté de génie.">
-<meta name="theme-color" content="#03101a">
+<meta name="theme-color" content="#050d14">
 <link rel="icon" type="image/png" href="media/LogoMarlin.png">
 <link rel="apple-touch-icon" href="media/LogoMarlin.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62.5..125,100..900&family=Schibsted+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="subpage">
-
-<div class="grid-bg"></div>
 
 <!-- ============ NAV ============ -->
 <nav id="nav">
@@ -30,8 +28,7 @@
     <li><a href="contact.html" class="active">Contact</a></li>
   </ul>
   <div class="nav-right">
-    <img src="media/UdeS_logo_h_noirHR.png" alt="Université de Sherbrooke" class="nav-udes">
-    <button class="lang" id="lang-toggle">FR / EN</button>
+    <a href="partenaires.html" class="nav-cta">Devenir partenaire</a>
     <button class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -56,7 +53,7 @@
     <div class="breadcrumb">
       <a href="index.html">Accueil</a> / Contact
     </div>
-    <h1>Contact.</h1>
+    <h1>Contact<span class="accent">.</span></h1>
     <p>Partenariat, recrutement, presse ou simple curiosité — écris-nous. On répond toujours.</p>
   </div>
 </section>
@@ -72,21 +69,27 @@
         <p>Que vous souhaitiez devenir partenaire, rejoindre l'équipe ou en savoir plus sur le projet, l'équipe MARLIN est à votre écoute.</p>
 
         <div class="contact-detail">
-          <div class="ico">✉️</div>
+          <div class="ico" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="3" width="13" height="10" rx="1" stroke="currentColor" stroke-width="1.3"/><path d="M2 4l6 5 6-5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
           <div>
             <div class="ct-label">Courriel</div>
             <a href="mailto:marlin@usherbrooke.ca">marlin@usherbrooke.ca</a>
           </div>
         </div>
         <div class="contact-detail">
-          <div class="ico">📍</div>
+          <div class="ico" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14.5s5-4.6 5-8.1A5 5 0 0 0 3 6.4c0 3.5 5 8.1 5 8.1z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="6.4" r="1.7" stroke="currentColor" stroke-width="1.3"/></svg>
+          </div>
           <div>
             <div class="ct-label">Localisation</div>
             <span class="ct-val">Faculté de génie · Université de Sherbrooke, QC</span>
           </div>
         </div>
         <div class="contact-detail">
-          <div class="ico">🤝</div>
+          <div class="ico" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 9l3-3 3 2.5L13 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 4H13v3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12.5h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
           <div>
             <div class="ct-label">Partenariats</div>
             <a href="partenaires.html">Voir les paliers de commandite</a>
@@ -94,7 +97,7 @@
         </div>
 
         <div class="contact-socials">
-          <a href="https://www.instagram.com/marlin_usherbrooke/" target="_blank" rel="noopener" class="contact-social">IG</a>
+          <a href="https://www.instagram.com/marlin_usherbrooke/" target="_blank" rel="noopener" class="contact-social">Instagram</a>
         </div>
       </div>
 
@@ -127,10 +130,8 @@
   <div class="footer-grid">
     <div class="footer-brand">
       <img src="media/LogoMarlin.png" alt="MARLIN" class="footer-logo">
-      <div class="footer-brand-text">
-        <h3>MARLIN.</h3>
-        <p>Équipe étudiante en génie — Université de Sherbrooke. SuMoTh International Challenge.</p>
-      </div>
+      <h3>MARLIN<span class="accent">.</span></h3>
+      <p>Équipe étudiante en génie — Université de Sherbrooke. SuMoTh International Challenge.</p>
     </div>
     <div class="footer-col">
       <h4>Naviguer</h4>
@@ -147,12 +148,10 @@
       <a href="contact.html">Nous contacter</a>
       <a href="mailto:marlin@usherbrooke.ca">marlin@usherbrooke.ca</a>
       <a href="https://www.instagram.com/marlin_usherbrooke/" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://linkedin.com/company/VOTRE_PAGE_LINKEDIN" target="_blank" rel="noopener">LinkedIn</a>
     </div>
   </div>
   <div class="footer-bottom">
     <div>© 2026 MARLIN · Université de Sherbrooke</div>
-    <img src="media/UdeS_logo_h_noirHR.png" alt="UdeS" class="footer-udes">
     <div>Faculté de génie · Sherbrooke, QC</div>
   </div>
 </footer>
