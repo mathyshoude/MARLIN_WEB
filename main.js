@@ -205,7 +205,7 @@ document.querySelectorAll('[data-count]').forEach(el => counterIO.observe(el));
 /* ============ COMPTE À REBOURS SUMOTH ============ */
 const cdDays = document.getElementById('cd-days');
 if (cdDays) {
-  const COMP_DATE = new Date('2027-07-15T09:00:00+02:00'); // Lac de Garde, Italie
+  const COMP_DATE = new Date('2027-06-10T09:00:00+02:00'); // Lac de Garde, Italie
   const cdH = document.getElementById('cd-hours');
   const cdM = document.getElementById('cd-mins');
   const cdS = document.getElementById('cd-secs');
